@@ -163,4 +163,90 @@ const getAllCityRates = async (req, res) => {
   }
 };
 
-module.exports = { getEstimateTotalValue, sendToContractor, getRates, getModelLink, getFloors, getAllCityRates  };
+
+const getProjectSummary = async (req, res) => {
+  try {
+    const data = req.method === 'GET' ? req.query : req.body;
+    const { bedrooms, bathrooms, floors, style, features, unit, city } = data;
+
+    // Initialize summary structure
+    const summary = [];
+    let total = 0;
+
+    // --- Bedrooms ---
+    const [bedRows] = await db.query('SELECT price FROM bedrooms WHERE count = ? LIMIT 1', [bedrooms]);
+    const bedPrice = bedRows.length ? parseFloat(bedRows[0].price) : 0;
+    summary.push({ label: `🛏️ Bedrooms (${bedrooms})`, price: bedPrice });
+    total += bedPrice;
+
+    // --- Bathrooms ---
+    const [bathRows] = await db.query('SELECT price FROM bathrooms WHERE count = ? LIMIT 1', [bathrooms]);
+    const bathPrice = bathRows.length ? parseFloat(bathRows[0].price) : 0;
+    summary.push({ label: `🛁 Bathrooms (${bathrooms})`, price: bathPrice });
+    total += bathPrice;
+
+    // --- Floors ---
+    const [floorRows] = await db.query('SELECT price FROM floors WHERE name = ? LIMIT 1', [floors]);
+    const floorPrice = floorRows.length ? parseFloat(floorRows[0].price) : 0;
+    summary.push({ label: `🏢 Floors (${floors})`, price: floorPrice });
+    total += floorPrice;
+
+    // --- Style ---
+    const [styleRows] = await db.query(
+      'SELECT price FROM styles WHERE name = ? LIMIT 1',
+      [style === 'Modern' ? 'Modern / Contemporary' : style]
+    );
+    const stylePrice = styleRows.length ? parseFloat(styleRows[0].price) : 0;
+    summary.push({ label: `🎨 Style (${style})`, price: stylePrice });
+    total += stylePrice;
+
+    // --- Features ---
+    let featuresPrice = 0;
+    if (features && features.length) {
+      const placeholders = features.map(() => '?').join(',');
+      const [featRows] = await db.query(`SELECT name, price FROM features WHERE feature_id IN (${placeholders})`, features);
+      featRows.forEach(f => {
+        featuresPrice += parseFloat(f.price);
+        summary.push({ label: `🏡 Feature - ${f.name}`, price: parseFloat(f.price) });
+      });
+    } else {
+      summary.push({ label: `🏡 Features`, price: 0 });
+    }
+    total += featuresPrice;
+
+    // --- City & Unit size ---
+    const [cityRows] = await db.query('SELECT rate FROM city_rates WHERE city = ? LIMIT 1', [city]);
+    const cityRate = cityRows.length ? parseFloat(cityRows[0].rate) : 0;
+    const cityPrice = (parseFloat(unit) || 0) * cityRate;
+    summary.push({ label: `📏 Unit Size (${unit} sqm) x City Rate (${city})`, price: cityPrice });
+    total += cityPrice;
+
+    // --- Permit, Labor, Design (Optional fixed or computed rates) ---
+    const permit = total * 0.05; // example: 5% of total
+    const labor = total * 0.15;  // example: 15% of total
+    const design = total * 0.07; // example: 7% of total
+
+    summary.push({ label: '📑 Permit & Fees', price: permit });
+    summary.push({ label: '👷 Labor Est.', price: labor });
+    summary.push({ label: '📐 Design & Planning', price: design });
+
+    total += permit + labor + design;
+
+    // --- Return response ---
+    res.json({
+      summary: summary.map(s => ({
+        ...s,
+        priceFormatted: `₱${s.price.toLocaleString()}`
+      })),
+      total: `₱${total.toLocaleString()}`,
+      rawTotal: total
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+module.exports = { getEstimateTotalValue, sendToContractor, getRates, getModelLink, getFloors, getAllCityRates, getProjectSummary  };

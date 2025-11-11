@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { getEstimateTotalValue, sendToContractor, getRates, getModelLink, getFloors, getAllCityRates } = require('../../controller/admin/estimateController');
+const { getEstimateTotalValue, sendToContractor, getRates, getModelLink, getFloors, getAllCityRates, getProjectSummary } = require('../../controller/admin/estimateController');
 
 // Routes
 router.post('/getEstimateTotalValue', getEstimateTotalValue);
@@ -9,5 +9,6 @@ router.get('/rates', getRates); // existing endpoint
 router.get('/getModelLink', getModelLink); // new endpoint for frontend to fetch model link
 router.get('/getFloors', getFloors);
 router.get('/cityRates', getAllCityRates);
+router.post('/getProjectSummary', getProjectSummary);
 
 module.exports = router;

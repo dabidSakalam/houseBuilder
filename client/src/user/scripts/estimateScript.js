@@ -169,7 +169,8 @@ async function fetchDynamicOptions() {
       featuresContainer.innerHTML = '<p>Features</p>';
       featuresData.forEach(f => {
         const label = document.createElement('label');
-        label.innerHTML = `<input type="checkbox" value="${f.name}" data-id="${f.feature_id}" /> ${f.name}`;
+        // ✅ Add class 'feature-checkbox'
+        label.innerHTML = `<input type="checkbox" class="feature-checkbox" data-id="${f.feature_id}" /> ${f.name}`;
         featuresContainer.appendChild(label);
       });
     }
@@ -193,9 +194,11 @@ async function fetchDynamicOptions() {
 
 // ===== CALCULATION VIA BACKEND =====
 async function calculateTotalFromBackend() {
-  const selectedFeatures = Array.from(featureCheckboxes())
-    .filter(f => f.checked)
-    .map(cb => Number(cb.dataset.id));
+  // ✅ Get all selected feature IDs
+  const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox'))
+    .filter(cb => cb.checked)
+    .map(cb => Number(cb.dataset.id))
+    .filter(Boolean); // remove invalid IDs
 
   const payload = {
     bedrooms: parseInt(bedrooms.value, 10) || 0,
@@ -207,8 +210,10 @@ async function calculateTotalFromBackend() {
     features: selectedFeatures
   };
 
+  console.log('Selected features sent to backend:', selectedFeatures); // ✅ debug
+
   try {
-    const res = await fetch('http://localhost:3000/api/v1/estimates/getEstimateTotalValue', {
+    const res = await fetch('http://localhost:3000/api/v1/estimates/getProjectSummary', {
       method: 'POST',
       headers: {'Content-Type':'application/json'},
       body: JSON.stringify(payload)
@@ -216,12 +221,14 @@ async function calculateTotalFromBackend() {
 
     if (!res.ok) throw new Error('Failed to get estimate total');
     const data = await res.json();
-    return data.total || 0;
+    return data.rawTotal || 0;
   } catch (err) {
     console.error(err);
     return 0;
   }
 }
+
+
 
 // ===== ESTIMATE BUTTON =====
 estimateBtn.addEventListener('click', async (e) => {
@@ -231,6 +238,7 @@ estimateBtn.addEventListener('click', async (e) => {
 
   const totalEstimate = await calculateTotalFromBackend();
   estimateAmount.textContent = `₱${Number(totalEstimate).toLocaleString()}`;
+  getProjectSummary()
 });
 
 // ===== SEND TO CONTRACTOR =====
@@ -339,3 +347,60 @@ function showLoginMessage() {
 fetchRates();
 fetchDynamicOptions();
 updateModelPreview();
+
+const projectSummaryElement = document.querySelector('.projectSummary');
+const projectSummaryHTML = `<div class="estimate-details">
+      <div>🛏️ Bedrooms </div>
+      <div>🛁 Bathrooms</div>
+      <div>🎨 Style Category</div>
+      <div>📏 Unit Size</div>
+      <div>🏢 Floors</div>
+      <div>🏡 Features</div>
+      <div>📑 Permit & Fees</div>
+      <div>👷 Labor Est.</div>
+      <div>📐 Design & Planning</div>
+    </div>`;
+
+
+async function getProjectSummary() {
+  const res = await fetch('http://localhost:3000/api/v1/estimates/getProjectSummary', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      bedrooms: bedrooms.value,
+      bathrooms: bathrooms.value,
+      style: style.value,
+      unit: unit.value,
+      floors: floors.value,
+      city: city.value,
+      features: Array.from(document.querySelectorAll('.feature-checkbox'))
+        .filter(cb => cb.checked)
+        .map(cb => Number(cb.dataset.id))
+    })
+  });
+
+  if (!res.ok) {
+    console.error("Failed to fetch project summary:", res.status);
+    projectSummaryElement.innerHTML = `<p style="color:red;">Failed to load summary</p>`;
+    return;
+  }
+
+  const data = await res.json();
+
+  // Generate rows
+  const detailsHTML = data.summary
+    .map(item => `
+      <div class="estimate-row">
+        <span class="estimate-label">${item.label}</span>
+        <span class="estimate-price">${item.priceFormatted}</span>
+      </div>
+    `)
+    .join('');
+
+  projectSummaryElement.innerHTML = `
+    <div class="estimate-details">
+      ${detailsHTML}
+      <hr class="estimate-divider">
+    </div>
+  `;
+}
