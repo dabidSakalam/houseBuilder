@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - City Rates</title>
+  <link rel="stylesheet" href="./styles/cityRates.css">
+  <script src="./scripts/checkAdminLogin.js"></script>
+  
+</head>
+<body>
+  <header class="admin-header">
+    <h1>City Rates</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="users.html">Users</a>
+      <a href="models.html">Models</a>
+      <a href="cityRates.html">City Rates</a>
+      <a href="features.html">Features</a>
+      <a href="estimates.html">Estimates</a>
+      <a href="adminLogin.html" id="logoutBtn" class="btn-logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <section class="rate-controls">
+      <button id="addCityBtn">Add City</button>
+      <input type="text" id="searchCity" placeholder="Search city...">
+    </section>
+
+    <section class="rate-table-section">
+      <table class="rate-table">
+        <thead>
+          <tr>
+            <th>City</th>
+            <th>Rate per sqm</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="rateTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="./scripts/cityRates.js"></script>
+</body>
+</html>

@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HouseBuilder - Project Estimate</title>
+  <link rel="stylesheet" href="./styles/home.css" />
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🏠 <strong><a href="./index.html">HouseBuilder</a></strong></div>
+    <nav>
+      <div class="user-menu">
+        <div class="user-icon" id="userIcon">👤</div>
+        <div class="user-dropdown" id="userDropdown">
+          <button>Profile</button>
+          <button>Settings</button>
+          <button id="logoutBtn">Logout</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="main-container">
+    <!-- Left: Design Section -->
+    <section class="design-section">
+      <h2>Re-imagine and Explore Your Dream Home</h2>
+      <p>Selection of House Models with personalized estimated pricing for logged-in clients</p>
+      <div class="design-box">
+        <model-viewer
+          src="../../public/models/Modern/Modern(1F).glb"
+          alt="Modern House"
+          camera-controls
+          auto-rotate
+          style="width: 100%; height: 400px;"
+        ></model-viewer>
+      </div>
+      <button class="btn-primary" id="estimateBtn">Estimate Value</button>
+    </section>
+
+    <!-- Right: Filters -->
+    <aside class="filter-panel">
+      <h3>Filter Options</h3>
+
+      <label for="bedrooms">Number of Bedrooms</label>
+      <input type="number" id="bedrooms" min="1" placeholder="Enter number of bedrooms" />
+
+      <label for="bathrooms">Number of Bathrooms</label>
+      <input type="number" id="bathrooms" min="1" placeholder="Enter number of bathrooms" />
+
+      <label for="style">Style Category</label>
+      <select id="style">
+        <option value="Modern">Modern / Contemporary</option>
+        <option value="Traditional">Traditional</option>
+        <option value="Mediterranean">Mediterranean</option>
+        <option value="Minimalist">Minimalist</option>
+      </select>
+
+      <label for="unit">Unit Size (sqm)</label>
+      <input type="number" id="unit" min="50" placeholder="Enter unit size (sqm)" />
+
+      <label for="floors">Number of Floors</label>
+      <select id="floors"></select>
+
+      <div class="features" id="featuresContainer">
+        <p>Features</p>
+      </div>
+
+      <label for="city">Location in Cavite</label>
+      <select id="city">
+        <option selected disabled value="">Select City</option>
+        <!-- Populated dynamically -->
+      </select>
+    </aside>
+  </main>
+
+  <section class="estimate-section">
+    <div class="estimate-box">
+      <h3>TOTAL PROJECT ESTIMATE</h3>
+      <h1>----</h1>
+      <p>Estimated timeline: -- weeks</p>
+      <button class="btn-primary">Send to Contractor</button>
+      <small>*Estimates are preliminary and subject to change based on site conditions, material choices, and final specifications.</small>
+    </div>
+
+    <div class="estimate-details">
+      <div>🛏️ Bedrooms</div>
+      <div>🛁 Bathrooms</div>
+      <div>🎨 Style Category</div>
+      <div>📏 Unit Size</div>
+      <div>🏢 Floors</div>
+      <div>🏡 Features</div>
+      <div>📑 Permit & Fees</div>
+      <div>👷 Labor Est.</div>
+      <div>📐 Design & Planning</div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-card">
+      <h3>Pre-made House Models</h3>
+      <p>Browse curated images and designs to find inspiration for your dream home.</p>
+    </div>
+    <div class="footer-card">
+      <h3>Experienced Contractors</h3>
+      <p>Connect with professionals who bring your vision to life with quality craftsmanship.</p>
+    </div>
+    <div class="footer-card">
+      <h3>Personalized Pricing</h3>
+      <p>Get project estimates tailored to your specifications and location.</p>
+    </div>
+  </footer>
+
+  <script type="module" src="./scripts/estimateScript.js"></script>
+</body>
+</html>

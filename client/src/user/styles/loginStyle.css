@@ -1,0 +1,261 @@
+/* ------------------------ */
+/* General Reset & Fonts */
+/* ------------------------ */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Roboto', sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+  color: #333;
+}
+
+/* ------------------------ */
+/* Header / Navbar */
+/* ------------------------ */
+.navbar {
+  width: 100%;
+  padding: 15px 30px;
+  background: #fff;
+  border-bottom: 1px solid #e0e0e0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar{
+  position: relative;
+}
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  color: #164dd8;                 /* matching your button color */
+  display: flex;
+  align-items: center;
+}
+
+.logo strong {
+  margin-left: 8px;
+}
+
+.navbar .logo .adminLogin{
+  position: absolute;
+  right: 25px;
+
+}
+
+/* ------------------------ */
+/* Login Card / Container */
+/* ------------------------ */
+.login-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.login-box {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;          /* White background */
+  border-radius: 12px;       /* Rounded corners */
+  padding: 50px 40px;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.2); /* Shadow */
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.login-box:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+}
+
+.login-box h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.login-box p {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+
+/* ------------------------ */
+/* Form Inputs */
+/* ------------------------ */
+label {
+  display: block;
+  font-weight: 500;
+  margin-bottom: 8px;
+  font-size: 14px;
+  text-align: left;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  margin-bottom: 20px;
+  font-size: 16px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+}
+
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: #6C63FF;
+  box-shadow: 0 0 5px rgba(108, 99, 255, 0.3);
+}
+
+/* ------------------------ */
+/* Button */
+/* ------------------------ */
+.btn-primary {
+  width: 100%;
+  padding: 14px;
+  background: #6C63FF;
+  border: none;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  background: #5750c9;
+  transform: translateY(-2px);
+}
+
+/* ------------------------ */
+/* Links under form */
+/* ------------------------ */
+.links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+.links a {
+  color: #6C63FF;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+/* ------------------------ */
+/* Footer */
+/* ------------------------ */
+.footer {
+  background: #6C63FF;
+  color: #fff;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 14px;
+  margin-top: auto;
+}
+
+/* ------------------------ */
+/* Popup Message Box */
+/* ------------------------ */
+.popup-message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: #fff;
+  border-left: 5px solid;
+  padding: 12px 20px;
+  border-radius: 6px;
+  font-weight: 500;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.3s ease;
+  z-index: 9999;
+}
+
+.popup-message.success {
+  border-color: #28a745;
+  color: #155724;
+}
+
+.popup-message.error {
+  border-color: #dc3545;
+  color: #721c24;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-out {
+  animation: fadeOut 0.4s ease forwards;
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
+/* ------------------------ */
+/* Responsive Design */
+/* ------------------------ */
+@media (max-width: 480px) {
+  .login-card {
+    padding: 40px 20px;
+    border-radius: 10px;
+  }
+
+  .login-card h2 {
+    font-size: 24px;
+  }
+
+  .login-card p {
+    font-size: 13px;
+  }
+
+  input[type="email"],
+  input[type="password"] {
+    padding: 12px 14px;
+    font-size: 15px;
+  }
+
+  .btn-primary {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header nav {
+    margin-top: 10px;
+  }
+}
+
+a{
+  text-decoration: none;
+}

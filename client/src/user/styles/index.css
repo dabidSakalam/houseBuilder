@@ -1,0 +1,154 @@
+/* styles/index.css */
+
+/* Reset and base styling */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, html {
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+  color: #2c3e50;
+  overflow: hidden;
+  background-color: #f5f7fa;
+}
+
+/* Layout */
+.welcome-screen {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* LEFT SIDE: Background Image + Overlay */
+.welcome-left {
+  flex: 1.5;
+  background: url('../../../public/images/house.jpg') center center / cover no-repeat;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+/* Overlay tint */
+.welcome-left::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
+/* Overlay content (Start button) */
+.welcome-left .overlay {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+}
+
+/* Start Button */
+.start-btn {
+  display: inline-block;
+  padding: 14px 42px;
+  font-size: 1.1em;
+  font-weight: 600;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: #fff;
+  background: #27ae60;
+  border-radius: 50px;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  border: 2px solid #27ae60;
+  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+}
+
+.start-btn:hover {
+  background: transparent;
+  color: #27ae60;
+  transform: scale(1.05);
+  box-shadow: 0 4px 20px rgba(39, 174, 96, 0.6);
+}
+
+/* RIGHT SIDE: Text area */
+.welcome-right {
+  flex: 1;
+  background: #ecf0f1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 60px 70px;
+}
+
+.welcome-title {
+  font-size: 1.6rem;
+  font-weight: 500;
+  color: #34495e;
+  margin-bottom: 10px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.logo {
+  background: #27ae60;
+  color: #fff;
+  font-size: 2.2rem;
+  font-weight: 700;
+  padding: 20px 25px;
+  border-radius: 15px;
+  margin-right: 20px;
+  box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
+}
+
+.brand-name {
+  font-size: 2.6rem;
+  color: #2c3e50;
+  font-weight: 700;
+  margin: 0;
+}
+
+.tagline {
+  font-size: 1rem;
+  color: #7f8c8d;
+  margin: 0;
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #555;
+  max-width: 520px;
+}
+
+/* RESPONSIVE */
+@media (max-width: 992px) {
+  .welcome-screen {
+    flex-direction: column;
+  }
+
+  .welcome-left, .welcome-right {
+    flex: unset;
+    width: 100%;
+    height: 50vh;
+  }
+
+  .welcome-right {
+    text-align: center;
+    padding: 40px 25px;
+  }
+
+  .brand {
+    justify-content: center;
+  }
+
+  .description {
+    margin: 0 auto;
+  }
+}

@@ -1,0 +1,215 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+}
+
+.admin-header {
+  background: #2c3e50;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header nav a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.admin-header nav a:hover {
+  text-decoration: underline;
+}
+
+.admin-main {
+  padding: 2rem;
+}
+
+.model-controls {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
+.model-controls input {
+  padding: 0.5rem;
+  width: 250px;
+}
+
+.model-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
+
+.model-table th, .model-table td {
+  border: 1px solid #ccc;
+  padding: 0.5rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+.model-table th {
+  background: #ecf0f1;
+}
+
+.model-table tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+button {
+  padding: 0.4rem 0.8rem;
+  cursor: pointer;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.9rem;
+}
+
+button:hover {
+  background: #2980b9;
+}
+
+/* Modal */
+#modelModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#modelModal .modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  max-width: 800px;
+  width: 90%;
+}
+
+#modelModal model-viewer {
+  width: 100%;
+  height: 500px;
+  border-radius: 12px;
+}
+
+
+.btn-logout {
+  margin-left: 1rem;
+  padding: 6px 12px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  background: #c0392b;
+}
+
+
+/* Modal overlay */
+.modal {
+  display: none; /* hidden by default */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* Modal content */
+.modal-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px 30px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Modal h2 */
+.modal-content h2 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/* Inputs inside modal */
+.modal-content input[type="text"],
+.modal-content input[type="number"],
+.modal-content input[type="file"],
+.modal-content select {
+  width: 100%;
+  padding: 8px 10px;
+  margin: 6px 0 12px 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+/* Checkbox label */
+.modal-content label {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-bottom: 10px;
+}
+
+/* Modal actions wrapper */
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+/* Buttons inside modal */
+.modal-actions button {
+  padding: 8px 16px;
+  cursor: pointer;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+}
+
+.modal-actions button:hover {
+  background: #2980b9;
+}
+
+/* Close button */
+.modal .close-btn {
+  background: #e74c3c;
+}
+
+.modal .close-btn:hover {
+  background: #c0392b;
+}
+
+/* Scrollable for tall forms */
+@media (max-height: 600px) {
+  .modal-content {
+    max-height: 90%;
+    overflow-y: auto;
+  }
+}

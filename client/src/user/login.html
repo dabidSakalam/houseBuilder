@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HouseBuilder - Login</title>
+  <link rel="stylesheet" href="./styles/loginStyle.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">🏠 
+      <strong><a href="index.html">HouseBuilder</a></strong>
+
+      <a class="adminLogin" href="../admin/adminLogin.html">👤</a>
+    </div>
+  </header>
+
+  <main class="login-container">
+    <form class="login-box" id="loginForm">
+      <h2>Welcome Back</h2>
+      <p>Log in to access your personalized house designs and estimates.</p>
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required />
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter your password" required />
+
+      <button type="submit" class="btn-primary">Login</button>
+
+      <div class="links">
+        <a href="#">Forgot Password?</a>
+        <a href="./register.html">Create Account</a>
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer">
+    <p>© 2025 HouseBuilder. All rights reserved.</p>
+  </footer>
+
+  <script src="./scripts/loginScript.js"></script>
+</body>
+</html>

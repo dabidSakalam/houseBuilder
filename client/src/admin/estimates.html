@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Project Estimates</title>
+  <link rel="stylesheet" href="./styles/estimates.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script src="./scripts/checkAdminLogin.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Estimates</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="users.html">Users</a>
+      <a href="models.html">Models</a>
+      <a href="cityRates.html">City Rates</a>
+      <a href="features.html">Features</a>
+      <a href="estimates.html">Estimates</a>
+      <a href="adminLogin.html" id="logoutBtn" class="btn-logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <section class="estimate-controls">
+      <input type="text" id="searchEstimate" placeholder="Search by client or project...">
+    </section>
+
+    <section class="estimate-table-section">
+      <table class="estimate-table">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Bedrooms</th>
+            <th>Bathrooms</th>
+            <th>Style</th>
+            <th>Unit Size (sqm)</th>
+            <th>Floors</th>
+            <th>Features</th>
+            <th>City</th>
+            <th>Status</th>
+            <th>Assumed Date</th>
+            <th>Complete Date</th>
+            <th>Total Estimate (₱)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="estimateTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="./scripts/estimates.js"></script>
+</body>
+</html>

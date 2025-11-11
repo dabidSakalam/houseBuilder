@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - House Features</title>
+  <link rel="stylesheet" href="./styles/features.css">
+  <script src="./scripts/checkAdminLogin.js"></script>
+
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Features</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="users.html">Users</a>
+      <a href="models.html">Models</a>
+      <a href="cityRates.html">City Rates</a>
+      <a href="features.html">Features</a>
+      <a href="estimates.html">Estimates</a>
+      <a href="adminLogin.html" id="logoutBtn" class="btn-logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <section class="feature-controls">
+      <button id="addFeatureBtn">Add Feature</button>
+      <input type="text" id="searchFeature" placeholder="Search feature...">
+    </section>
+
+    <section class="feature-table-section">
+      <table class="feature-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Price (₱)</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="featureTableBody">
+          <!-- Populated by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+  <!-- Add/Edit Feature Modal -->
+<div id="featureModal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <h2 id="modalTitle">Add Feature</h2>
+    <form id="featureForm">
+      <label for="featureName">Feature Name:</label>
+      <input type="text" id="featureName" required>
+      <label for="featurePrice">Price (₱):</label>
+      <input type="number" id="featurePrice" required>
+      <button type="submit" id="modalSubmitBtn">Save</button>
+    </form>
+  </div>
+</div>
+  
+
+  <script type="module" src="./scripts/features.js"></script>
+</body>
+</html>

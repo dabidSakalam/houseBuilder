@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Models</title>
+  <link rel="stylesheet" href="./styles/models.css">
+  <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  <script src="./scripts/checkAdminLogin.js"></script>
+
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Models</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="users.html">Users</a>
+      <a href="models.html">Models</a>
+      <a href="cityRates.html">City Rates</a>
+      <a href="features.html">Features</a>
+      <a href="estimates.html">Estimates</a>
+      <a href="adminLogin.html" id="logoutBtn" class="btn-logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <section class="model-controls">
+      <button id="addModelBtn">Add Model</button>
+      <input type="text" id="searchModel" placeholder="Search models...">
+    </section>
+
+    <section class="model-table-section">
+      <table class="model-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Category</th>
+            <th>Floors</th>
+            <th>Preview</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="modelTableBody">
+          <!-- Models populated by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="./scripts/models.js"></script>
+</body>
+</html>

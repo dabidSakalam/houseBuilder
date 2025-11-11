@@ -1,0 +1,197 @@
+/* Reset & body */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f9f9f9;
+}
+
+/* Header/Nav */
+.admin-header {
+  background: #2c3e50;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header nav a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.admin-header nav a:hover,
+.admin-header nav a.active {
+  text-decoration: underline;
+}
+
+/* Main content */
+.admin-main {
+  padding: 20px;
+}
+
+/* Controls */
+.estimate-controls {
+  margin-bottom: 15px;
+}
+
+.estimate-controls input {
+  width: 300px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+/* Table */
+.estimate-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.estimate-table th, .estimate-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.estimate-table th {
+  background-color: #f4f4f4;
+}
+
+.estimate-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.estimate-table button {
+  padding: 4px 8px;
+  margin-right: 4px;
+  cursor: pointer;
+  border-radius: 4px;
+  border: none;
+  color: white;
+}
+
+.estimate-table .edit-btn { background-color: #4CAF50; }
+.estimate-table .delete-btn { background-color: #f44336; }
+
+/* Edit Modal */
+#editModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+#editModal .modal-content {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 80%;
+  max-width: 700px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 25px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+}
+
+#editModal h2 {
+  grid-column: 1 / -1;
+  margin: 0 0 15px;
+  font-size: 1.4rem;
+  color: #2c3e50;
+}
+
+#editModal label {
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+#editModal input, 
+#editModal select {
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+/* Features + preview side by side */
+#editModal .features-preview {
+  display: flex;
+  gap: 20px;
+  grid-column: 1 / -1;
+  align-items: flex-start;
+}
+
+#editModal .features-preview .features {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+#editModal .features-preview .features label {
+  display: flex;
+  align-items: center;
+}
+#editModal .features-preview .features label p{
+  width: 140px;
+}
+
+#editModal .features-preview .features label input{
+  width: fit-content;
+}
+#editModal .features-preview .preview {
+  flex: 1;
+}
+
+/* Modal buttons */
+#editModal .modal-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+#editModal button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #fff;
+  font-weight: 600;
+}
+
+#saveBtn { background-color: #4CAF50; }
+#closeModalBtn { background-color: #f44336; }
+
+
+.btn-logout {
+  margin-left: 1rem;
+  padding: 6px 12px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  background: #c0392b;
+}
+
+.modalFeatureContainer{
+  display: flex;
+  flex-direction: row-reverse;
+  align-items: center;
+}
+
+
+.modalFeatureContainer p{
+  width: 250px;
+  font-size: 14px;
+}

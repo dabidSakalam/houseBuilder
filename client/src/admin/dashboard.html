@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="./styles/dashboard.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="./scripts/checkAdminLogin.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Admin Dashboard</h1>
+    <nav>
+      <a href="dashboard.html" class="active">Dashboard</a>
+      <a href="users.html">Users</a>
+      <a href="models.html">Models</a>
+      <a href="cityRates.html">City Rates</a>
+      <a href="features.html">Features</a>
+      <a href="estimates.html">Estimates</a>
+      <button id="logoutBtn" class="btn-logout">Logout</button>
+    </nav>
+  </header>
+
+  <main class="main-content">
+    <section class="cards">
+      <div class="card">
+        <h3>Total Users</h3>
+        <p id="totalUsers">0</p>
+      </div>
+      <div class="card">
+        <h3>Total Admins</h3>
+        <p id="totalAdmins">0</p>
+      </div>
+      <div class="card">
+        <h3>Total Models</h3>
+        <p id="totalModels">0</p>
+      </div>
+      <div class="card">
+        <h3>Total Estimates</h3>
+        <p id="totalEstimates">0</p>
+      </div>
+      <div class="card">
+        <h3>Pending Estimates</h3>
+        <p id="pendingEstimates">0</p>
+      </div>
+      <div class="card">
+        <h3>Completed Estimates</h3>
+        <p id="completedEstimates">0</p>
+      </div>
+    </section>
+
+    <section class="charts">
+      <div class="chart-card">
+        <h3>Estimates by City</h3>
+        <canvas id="cityChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Models by Style</h3>
+        <canvas id="styleChart"></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Top 5 Features</h3>
+        <canvas id="featureChart"></canvas>
+      </div>
+    </section>
+  </main>
+
+  <script type="module" src="./scripts/dashboard.js"></script>
+</body>
+</html>

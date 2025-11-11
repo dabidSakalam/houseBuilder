@@ -1,0 +1,82 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  background: #f9f9f9;
+}
+
+.admin-header {
+  background: #2c3e50;
+  color: white;
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.admin-header nav a {
+  color: white;
+  margin-left: 1rem;
+  text-decoration: none;
+}
+
+.admin-header nav a:hover {
+  text-decoration: underline;
+}
+
+.admin-main {
+  padding: 20px;
+}
+
+.settings-form {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 500px;
+}
+
+.settings-form h2 {
+  margin-top: 0;
+}
+
+.settings-form label {
+  display: block;
+  margin: 15px 0 5px;
+}
+
+.settings-form input,
+.settings-form select {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.settings-form button {
+  margin-top: 20px;
+  padding: 10px 15px;
+  background: #2c3e50;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+#saveMessage {
+  margin-top: 10px;
+  color: green;
+}
+
+
+.btn-logout {
+  margin-left: 1rem;
+  padding: 6px 12px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-logout:hover {
+  background: #c0392b;
+}

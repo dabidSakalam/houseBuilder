@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin - Users</title>
+  <link rel="stylesheet" href="./styles/users.css">
+  <script src="./scripts/checkAdminLogin.js"></script>
+</head>
+<body>
+  <header class="admin-header">
+    <h1>Users</h1>
+    <nav>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="users.html">Users</a>
+      <a href="models.html">Models</a>
+      <a href="cityRates.html">City Rates</a>
+      <a href="features.html">Features</a>
+      <a href="estimates.html">Estimates</a>
+      <a href="adminLogin.html" id="logoutBtn" class="btn-logout">Logout</a>
+    </nav>
+  </header>
+
+  <main class="admin-main">
+    <section class="user-controls">
+      <div></div>
+      <input type="text" id="searchUser" placeholder="Search users...">
+    </section>
+
+    <section class="user-table-section">
+      <table class="user-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Created At</th>
+          </tr>
+        </thead>
+        <tbody id="userTableBody">
+          <!-- Users populated by JS -->
+        </tbody>
+      </table>
+    </section>
+  </main>
+
+  <script type="module" src="./scripts/users.js"></script>
+</body>
+</html>
