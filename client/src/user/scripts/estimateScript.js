@@ -120,7 +120,7 @@ function validateConstraints() {
   if (isNaN(ba) || ba < 1 || ba > 6) { bathrooms.classList.add('input-error'); valid = false; } 
   else bathrooms.classList.remove('input-error');
 
-  if (isNaN(u) || u < 60 || u > 400) { unit.classList.add('input-error'); valid = false; } 
+  if (isNaN(u) || u < 60 || u > 1200) { unit.classList.add('input-error'); valid = false; } 
   else unit.classList.remove('input-error');
 
   if (!city.value) { city.classList.add('input-error'); valid = false; } else city.classList.remove('input-error');
