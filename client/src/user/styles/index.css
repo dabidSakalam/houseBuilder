@@ -104,7 +104,7 @@ body, html {
   padding: 20px 25px;
   border-radius: 15px;
   margin-right: 20px;
-  box-shadow: 0 4px 10px rgba(39, 174, 96, 0.3);
+  box-shadow: 0 4px 10px #1a2c5d;
 }
 
 .brand-name {

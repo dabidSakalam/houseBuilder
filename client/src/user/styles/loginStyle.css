@@ -46,6 +46,7 @@ body {
 
 .logo strong {
   margin-left: 8px;
+  
 }
 
 .navbar .logo .adminLogin{
@@ -120,8 +121,8 @@ input[type="password"] {
 
 input[type="email"]:focus,
 input[type="password"]:focus {
-  border-color: #6C63FF;
-  box-shadow: 0 0 5px rgba(108, 99, 255, 0.3);
+  border-color: #3455b1;
+  box-shadow: 0 0 5px #20356d;
 }
 
 /* ------------------------ */
@@ -130,7 +131,7 @@ input[type="password"]:focus {
 .btn-primary {
   width: 100%;
   padding: 14px;
-  background: #6C63FF;
+  background: #3455b1;
   border: none;
   color: #fff;
   font-size: 16px;
@@ -141,7 +142,7 @@ input[type="password"]:focus {
 }
 
 .btn-primary:hover {
-  background: #5750c9;
+  background: #223a77;
   transform: translateY(-2px);
 }
 
@@ -155,7 +156,7 @@ input[type="password"]:focus {
 }
 
 .links a {
-  color: #6C63FF;
+  color: #3455b1;
   text-decoration: none;
   font-size: 13px;
   font-weight: 500;
@@ -169,7 +170,7 @@ input[type="password"]:focus {
 /* Footer */
 /* ------------------------ */
 .footer {
-  background: #6C63FF;
+  background: #3455b1;
   color: #fff;
   text-align: center;
   padding: 15px 0;
