@@ -58,19 +58,19 @@ body, html {
   text-transform: uppercase;
   text-decoration: none;
   color: #fff;
-  background: #27ae60;
+  background: #3455b1;
   border-radius: 50px;
   letter-spacing: 1px;
   transition: all 0.3s ease;
-  border: 2px solid #27ae60;
-  box-shadow: 0 4px 12px rgba(39, 174, 96, 0.4);
+  border: 2px solid #3455b1;
+  box-shadow: 0 4px 12px #1b2e62;
 }
 
 .start-btn:hover {
   background: transparent;
-  color: #27ae60;
+  color: #3455b1;
   transform: scale(1.05);
-  box-shadow: 0 4px 20px rgba(39, 174, 96, 0.6);
+  box-shadow: 0 4px 20px #1c2d5b;
 }
 
 /* RIGHT SIDE: Text area */
@@ -97,7 +97,7 @@ body, html {
 }
 
 .logo {
-  background: #27ae60;
+  background: #3455b1;
   color: #fff;
   font-size: 2.2rem;
   font-weight: 700;

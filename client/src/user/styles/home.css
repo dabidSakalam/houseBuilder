@@ -12,7 +12,7 @@ body {
 
 /* Navbar */
 .navbar {
-  background: #fff;
+  background: #3455b1;
   border-bottom: 1px solid #e5e5e5;
   padding: 1rem 2rem;
   display: flex;
@@ -23,11 +23,11 @@ body {
 }
 .logo a {
   text-decoration: none;
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 .login-btn {
-  background: #164dd8;
+  background: #ffffff;
   color: #fff;
   text-decoration: none;
   padding: 8px 16px;
@@ -36,7 +36,7 @@ body {
   font-weight: 500;
 }
 .login-btn:hover {
-  background: #0e3ab3;
+  background: #ffffff;
 }
 
 /* Layout */
@@ -70,8 +70,8 @@ body {
   margin-bottom: 15px;
 }
 .btn-primary {
-  background: #164dd8;
-  color: #fff;
+  background: #ffffff;
+  color: #3455b1;
   border: none;
   padding: 10px 20px;
   border-radius: 5px;
@@ -80,7 +80,7 @@ body {
   transition: background 0.2s;
 }
 .btn-primary:hover {
-  background: #0e3ab3;
+  background: #b8b8b8;
 }
 
 /* Filter panel */
@@ -144,7 +144,7 @@ input[type="number"] {
   margin-bottom: 20px;
 }
 .estimate-box h1 {
-  color: #0e3ab3;
+  color: #3455b1;
   margin: 10px 0;
 }
 .estimate-details {
@@ -162,7 +162,7 @@ input[type="number"] {
 
 /* Footer */
 .footer {
-  background: #0e3ab3;
+  background: #3455b1;
   color: white;
   display: flex;
   justify-content: space-around;
@@ -210,9 +210,10 @@ input[type="number"] {
   padding: 8px;
   border-radius: 50%;
   transition: background 0.2s;
+  background: #e9ebef;
 }
 .user-icon:hover {
-  background: #f1f3f6;
+  background: #b5b7ba;
 }
 .user-dropdown {
   display: none;
@@ -306,7 +307,7 @@ input[type="number"] {
   top: 30px;
   left: 50%;
   transform: translateX(-50%) translateY(-15px);
-  background: #164dd8;
+  background: #3455b1;
   color: #fff;
   padding: 14px 20px;
   border-radius: 8px;
@@ -331,7 +332,7 @@ input[type="number"] {
 
 .login-message .btn-primary {
   background: #fff;
-  color: #164dd8;
+  color: #3455b1;
   padding: 6px 12px;
   border-radius: 6px;
   text-decoration: none;
@@ -404,7 +405,7 @@ input[type="number"] {
   justify-content: space-between;
   font-size: 17px;
   font-weight: 600;
-  color: #0e3ab3;
+  color: #3455b1;
   padding: 8px 12px;
   background: #e6ecff;
   border-radius: 6px;

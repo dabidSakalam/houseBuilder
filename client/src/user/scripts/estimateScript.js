@@ -294,7 +294,7 @@ const floorNameToDb = {
   "Bungalow (1 Floor)": "1",
   "Two-Storey": "2",
   "Three-Storey": "3",
-  "High-Rise (4+ Floors)": "4"
+  "High-Rise": "4"
 };
 
 async function updateModelPreview() {
