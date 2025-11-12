@@ -5,7 +5,7 @@ body {
 }
 
 .admin-header {
-  background: #2c3e50;
+background: linear-gradient(to right, #243a77, #64651b);
   color: white;
   padding: 1rem 2rem;
   display: flex;
@@ -75,7 +75,7 @@ body {
 button {
   padding: 0.4rem 0.8rem;
   cursor: pointer;
-  background: #3498db;
+  background: #243a77;
   color: white;
   border: none;
   border-radius: 4px;
@@ -84,13 +84,13 @@ button {
 }
 
 button:hover {
-  background: #2980b9;
+  background: #17264e;
 }
 
 .btn-logout {
   margin-left: 1rem;
   padding: 6px 12px;
-  background: #e74c3c;
+  background: #243a77;
   color: white;
   border: none;
   border-radius: 6px;

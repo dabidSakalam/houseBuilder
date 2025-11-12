@@ -7,7 +7,7 @@ body {
 
 /* Header/Nav */
 .admin-header {
-  background: #2c3e50;
+background: linear-gradient(to right, #243a77, #64651b);
   color: white;
   padding: 1rem;
   display: flex;
@@ -173,7 +173,7 @@ body {
 .btn-logout {
   margin-left: 1rem;
   padding: 6px 12px;
-  background: #9c352a;
+  background: #243a77;
   color: white;
   border: none;
   border-radius: 6px;

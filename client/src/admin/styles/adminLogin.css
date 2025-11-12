@@ -1,12 +1,27 @@
 body {
   font-family: Arial, sans-serif;
-  background: #f9f9f9;
+  background: linear-gradient(270deg, #3c3e10, #3d63cb, #243a77, #3c3e10);
+  background-size: 600% 600%;
+  animation: gradientShift 10s ease-in-out infinite;
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
   margin: 0;
 }
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 
 .login-container {
   background: white;
@@ -37,7 +52,7 @@ body {
   margin-top: 20px;
   padding: 10px;
   width: 100%;
-  background: #2c3e50;
+  background: #3455b1;
   color: white;
   border: none;
   border-radius: 6px;
@@ -45,7 +60,7 @@ body {
 }
 
 .login-container button:hover {
-  background: #1a252f;
+  background: #17264f;
 }
 
 #loginMessage {
@@ -60,7 +75,7 @@ body {
 }
 
 .backToLogin{
-  background-color: rgb(150, 26, 26);
+  background-color: #969828;
   text-decoration: none;
   text-align: center;
   width: 100%;
@@ -72,5 +87,5 @@ body {
 }
 
 .backToLogin:hover{
-  background-color: rgb(109, 16, 16);
+  background-color: #3c3d10;
 }

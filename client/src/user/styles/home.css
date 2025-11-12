@@ -12,7 +12,7 @@ body {
 
 /* Navbar */
 .navbar {
-  background: #3455b1;
+   background: linear-gradient(to bottom, #465fa4,#3455b1);
   border-bottom: 1px solid #e5e5e5;
   padding: 1rem 2rem;
   display: flex;
@@ -70,9 +70,9 @@ body {
   margin-bottom: 15px;
 }
 .btn-primary {
-  background: #ffffff;
-  color: #3455b1;
-  border: none;
+  background: #3455b1;
+  color: #ffffff;
+  border: 1px solid #7a86a7;
   padding: 10px 20px;
   border-radius: 5px;
   cursor: pointer;
@@ -80,7 +80,7 @@ body {
   transition: background 0.2s;
 }
 .btn-primary:hover {
-  background: #b8b8b8;
+  background: #16254e;
 }
 
 /* Filter panel */
@@ -162,7 +162,7 @@ input[type="number"] {
 
 /* Footer */
 .footer {
-  background: #3455b1;
+  background: linear-gradient(to bottom, #3455b1, #7a89b1);
   color: white;
   display: flex;
   justify-content: space-around;
@@ -292,7 +292,7 @@ input[type="number"] {
   background: #2ecc71;
 }
 .popup-message.info {
-  background: #3498db;
+  background: #c1c434;
 }
 
 /* === Disabled Button (when not logged in) === */

@@ -12,9 +12,25 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #74ebd5, #ACB6E5);
+  background: linear-gradient(135deg, #000000, #5266c0, #d2f47e);
+  background-size: 400% 400%;
+  animation: gradientFlow 8s ease-in-out infinite;
   color: #333;
+  margin: 0;
 }
+
+@keyframes gradientFlow {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
 
 /* ------------------------ */
 /* Header / Navbar */

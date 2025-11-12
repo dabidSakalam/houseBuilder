@@ -92,7 +92,7 @@ function attachRealtimeValidation(input, min, max, message) {
 
 attachRealtimeValidation(bedrooms, 1, 6, 'Bedrooms must be between 1 and 6.');
 attachRealtimeValidation(bathrooms, 1, 6, 'Bathrooms must be between 1 and 6.');
-attachRealtimeValidation(unit, 60, 400, 'Unit size must be 60–400 sqm.');
+attachRealtimeValidation(unit, 60, 1200, 'Unit size must be 60–1200 sqm.');
 
 function validateInputs() {
   const inputs = [bedrooms, bathrooms, style, unit, floors, city];
