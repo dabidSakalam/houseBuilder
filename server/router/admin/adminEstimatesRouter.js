@@ -5,22 +5,26 @@ const {
   getEstimateById,
   updateEstimate,
   deleteEstimate,
-  getCityRates
+  getCityRates,
+  sendToContractor
 } = require('../../controller/admin/adminEstimatesController');
 
-// Get all estimates
+// Get all inquiries
 adminEstimatesRouter.get('/', getAllEstimates);
 
-// Get single estimate
+// Get single inquiry
 adminEstimatesRouter.get('/:id', getEstimateById);
 
-// Update estimate
+// Update inquiry
 adminEstimatesRouter.put('/:id', updateEstimate);
 
-// Delete estimate
+// Delete inquiry
 adminEstimatesRouter.delete('/:id', deleteEstimate);
 
 // Get city rates for dropdown
 adminEstimatesRouter.get('/cities/rates', getCityRates);
+
+// Send inquiry to contractor
+adminEstimatesRouter.post('/sendToContractor', sendToContractor);
 
 module.exports = adminEstimatesRouter;

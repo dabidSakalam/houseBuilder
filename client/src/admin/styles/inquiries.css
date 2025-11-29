@@ -1,0 +1,44 @@
+/* ===== GENERAL RESET ===== */
+* { margin:0; padding:0; box-sizing:border-box; font-family: "Poppins", sans-serif; }
+body { background-color:#f5f6fa; color:#2c3e50; min-height:100vh; }
+
+/* ===== HEADER ===== */
+.admin-header { background:#2c3e50; color:#fff; padding:20px 40px; display:flex; justify-content:space-between; align-items:center; }
+.admin-header h1 { font-size:24px; font-weight:600; }
+.admin-header nav a { color:#fff; margin-left:20px; text-decoration:none; font-weight:500; transition:color 0.3s; }
+.admin-header nav a:hover { color:#ffd700; }
+.btn-logout { background:#e74c3c; padding:6px 12px; border-radius:5px; transition:background 0.3s; }
+.btn-logout:hover { background:#c0392b; }
+
+/* ===== MAIN CONTENT ===== */
+.admin-main { padding:20px 40px; }
+.inquiry-controls { margin-bottom:20px; }
+#searchInquiry { width:100%; max-width:400px; padding:10px 15px; border-radius:6px; border:1px solid #ccc; outline:none; transition:border-color 0.3s; }
+#searchInquiry:focus { border-color:#2c3e50; }
+
+/* ===== TABLE ===== */
+.inquiry-table-section { overflow-x:auto; }
+.inquiry-table { width:100%; border-collapse:collapse; background:#fff; border-radius:8px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,0.1); }
+.inquiry-table th, .inquiry-table td { padding:12px 15px; text-align:left; border-bottom:1px solid #eee; }
+.inquiry-table th { background:#2c3e50; color:#fff; font-weight:600; }
+.inquiry-table tr:hover { background:#f1f1f1; }
+.reply-btn { background:#3498db; color:#fff; padding:6px 10px; border:none; border-radius:5px; cursor:pointer; transition:background 0.3s; }
+.reply-btn:hover { background:#2980b9; }
+
+/* ===== MODAL ===== */
+.modal { display:none; position:fixed; z-index:1000; left:0; top:0; width:100%; height:100%; overflow:auto; background:rgba(0,0,0,0.5); }
+.modal-content { background:#fff; margin:5% auto; padding:20px 30px; border-radius:8px; max-width:500px; position:relative; }
+.modal-content h2 { margin-bottom:15px; color:#2c3e50; }
+.close-btn { position:absolute; top:10px; right:15px; font-size:22px; font-weight:bold; color:#333; cursor:pointer; }
+
+/* ===== CHAT ===== */
+.chat-container { height:300px; overflow-y:auto; border:1px solid #ccc; padding:10px; margin-bottom:10px; border-radius:8px; background:#f9f9f9; }
+.message { margin-bottom:10px; padding:8px 10px; border-radius:8px; max-width:70%; }
+.message.admin { background:#3498db; color:#fff; margin-left:auto; }
+.message.user { background:#ecf0f1; color:#2c3e50; margin-right:auto; }
+.message strong { display:block; font-weight:600; }
+.msg-date { font-size:0.7em; color:#888; margin-left:5px; }
+.chat-input { display:flex; gap:5px; }
+.chat-input input { flex:1; padding:8px 10px; border-radius:6px; border:1px solid #ccc; outline:none; }
+.chat-input button { background:#27ae60; color:#fff; border:none; border-radius:6px; padding:8px 15px; cursor:pointer; font-weight:600; transition:background 0.3s; }
+.chat-input button:hover { background:#1e8449; }

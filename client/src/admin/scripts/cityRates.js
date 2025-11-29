@@ -19,9 +19,8 @@ function renderRates(list) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${item.city}</td>
-      <td>₱${parseFloat(item.rate).toLocaleString()}</td>
       <td>
-        <button class="edit-btn" data-id="${item.id}" data-city="${item.city}" data-rate="${item.rate}">Edit</button>
+        <button class="edit-btn" data-id="${item.id}" data-city="${item.city}">Edit</button>
         <button class="delete-btn" data-id="${item.id}" data-city="${item.city}">Delete</button>
       </td>
     `;
@@ -46,8 +45,6 @@ modal.innerHTML = `
       <input type="hidden" id="cityId">
       <label>City Name</label>
       <input type="text" id="cityName" required>
-      <label>Rate per sqm</label>
-      <input type="number" id="cityRate" required>
       <div class="modal-actions">
         <button type="submit">Save</button>
         <button type="button" id="closeModal">Cancel</button>
@@ -60,15 +57,13 @@ document.body.appendChild(modal);
 const cityForm = modal.querySelector('#cityForm');
 const closeModalBtn = modal.querySelector('#closeModal');
 
-function openModal(title, city = '', rate = '', id = '') {
+function openModal(title, city = '', id = '') {
   modal.classList.remove('hidden');
   document.getElementById('modalTitle').textContent = title;
   document.getElementById('cityName').value = city;
-  document.getElementById('cityRate').value = rate;
   document.getElementById('cityId').value = id;
 }
 function closeModal() { modal.classList.add('hidden'); }
-
 closeModalBtn.addEventListener('click', closeModal);
 
 // ===== Add Button =====
@@ -79,11 +74,10 @@ cityForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const id = document.getElementById('cityId').value;
   const city = document.getElementById('cityName').value.trim();
-  const rate = document.getElementById('cityRate').value;
 
-  if (!city || !rate) return alert('Fill all fields');
+  if (!city) return alert('Fill all fields');
 
-  const payload = { city, rate };
+  const payload = { city };
   const method = id ? 'PUT' : 'POST';
   const url = id
     ? `http://localhost:3000/api/v1/cityRates/${id}`
@@ -104,10 +98,9 @@ cityForm.addEventListener('submit', async (e) => {
 rateTableBody.addEventListener('click', async (e) => {
   const id = e.target.dataset.id;
   const city = e.target.dataset.city;
-  const rate = e.target.dataset.rate;
 
   if (e.target.classList.contains('edit-btn')) {
-    openModal(`Edit ${city}`, city, rate, id);
+    openModal(`Edit ${city}`, city, id);
   } else if (e.target.classList.contains('delete-btn')) {
     if (confirm(`Delete ${city}?`)) {
       const res = await fetch(`http://localhost:3000/api/v1/cityRates/${id}`, {

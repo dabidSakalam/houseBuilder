@@ -11,6 +11,13 @@ const cityRatesRoutes = require('./router/admin/cityRatesRouter');
 const modelsRoutes = require('./router/admin/modelsRouter'); // <-- add this
 const featuresRoutes = require('./router/admin/featuresRouter');
 const adminEstimatesRouter = require('./router/admin/adminEstimatesRouter');
+const adminInquiriesRouter = require('./router/admin/adminInquiriesRouter');
+const adminMessagesRouter = require('./router/admin/adminMessagesRoutes');
+
+const inboxRouter = require('./router/admin/inboxRouter');
+
+// other routes ...
+// Mount routers
 
 const app = express();
 
@@ -50,6 +57,11 @@ app.use('/api/v1/admin/features', featuresRoutes);
 //admin Estimate
 app.use('/api/v1/admin/adminEstimates', adminEstimatesRouter);
 
+app.use('/api/v1/admin/adminInquiries', adminInquiriesRouter);
+app.use('/api/v1/admin/adminInquiries', adminInquiriesRouter);
+app.use('/api/v1/admin/messages', adminMessagesRouter);
+
+app.use('/api/v1/user', inboxRouter);
 
 // Health check
 app.get("/", (req, res) => res.send("✅ HouseBuilder API running"));

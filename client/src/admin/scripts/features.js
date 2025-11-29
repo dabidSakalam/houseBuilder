@@ -6,14 +6,13 @@ const featureModal = document.getElementById('featureModal');
 const modalTitle = document.getElementById('modalTitle');
 const featureForm = document.getElementById('featureForm');
 const featureNameInput = document.getElementById('featureName');
-const featurePriceInput = document.getElementById('featurePrice');
 const modalSubmitBtn = document.getElementById('modalSubmitBtn');
 const closeBtn = document.querySelector('.close-btn');
 
 let featureList = [];
 let editingFeatureId = null;
 
-// Fetch features from API
+// Fetch features
 async function fetchFeatures() {
   const res = await fetch('http://localhost:3000/api/v1/admin/features');
   featureList = await res.json();
@@ -27,7 +26,6 @@ function renderFeatures(list) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
       <td>${item.name}</td>
-      <td>₱${item.price.toLocaleString()}</td>
       <td>
         <button class="edit-btn" data-id="${item.feature_id}">Edit</button>
         <button class="delete-btn" data-id="${item.feature_id}">Delete</button>
@@ -48,7 +46,6 @@ searchInput.addEventListener('input', () => {
 addFeatureBtn.addEventListener('click', () => {
   modalTitle.textContent = 'Add Feature';
   featureNameInput.value = '';
-  featurePriceInput.value = '';
   editingFeatureId = null;
   featureModal.style.display = 'block';
 });
@@ -62,22 +59,23 @@ closeBtn.addEventListener('click', () => {
 featureForm.addEventListener('submit', async (e) => {
   e.preventDefault();
   const name = featureNameInput.value.trim();
-  const price = parseInt(featurePriceInput.value, 10);
-  if (!name || isNaN(price)) return;
+  if (!name) return;
+
+  const payload = { name };
 
   if (editingFeatureId) {
     // Edit feature
     await fetch(`http://localhost:3000/api/v1/admin/features/${editingFeatureId}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, price })
+      body: JSON.stringify(payload)
     });
   } else {
     // Add new feature
     await fetch('http://localhost:3000/api/v1/admin/features', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name, price })
+      body: JSON.stringify(payload)
     });
   }
 
@@ -93,7 +91,6 @@ featureTableBody.addEventListener('click', async (e) => {
   if (e.target.classList.contains('edit-btn')) {
     modalTitle.textContent = 'Edit Feature';
     featureNameInput.value = feature.name;
-    featurePriceInput.value = feature.price;
     editingFeatureId = id;
     featureModal.style.display = 'block';
   } else if (e.target.classList.contains('delete-btn')) {

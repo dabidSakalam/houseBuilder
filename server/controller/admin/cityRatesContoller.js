@@ -1,7 +1,7 @@
 const { db } = require('../../db/connection');
 
-// ===== GET all city rates =====
-exports.getAllCityRates = async (req, res) => {
+// ===== GET all cities =====
+exports.getAllCities = async (req, res) => {
   try {
     const [rows] = await db.query('SELECT * FROM city_rates ORDER BY city ASC');
     res.json(rows);
@@ -10,31 +10,27 @@ exports.getAllCityRates = async (req, res) => {
   }
 };
 
-// ===== ADD new city =====
-exports.addCityRate = async (req, res) => {
+// Add new city
+exports.addCity = async (req, res) => {
   try {
-    const { city, rate } = req.body;
-    if (!city || !rate) return res.status(400).json({ message: 'City and rate are required.' });
+    const { city } = req.body;
+    if (!city) return res.status(400).json({ message: 'City is required.' });
 
-    await db.query('INSERT INTO city_rates (city, rate) VALUES (?, ?)', [city, rate]);
+    await db.query('INSERT INTO city_rates (city) VALUES (?)', [city]);
     res.status(201).json({ message: 'City added successfully.' });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// ===== UPDATE city rate (allow changing city name too) =====
-exports.updateCityRate = async (req, res) => {
+// Update city
+exports.updateCity = async (req, res) => {
   try {
     const { id } = req.params;
-    const { city, rate } = req.body;
-    if (!city || !rate) return res.status(400).json({ message: 'City and rate are required.' });
+    const { city } = req.body;
+    if (!city) return res.status(400).json({ message: 'City is required.' });
 
-    const [result] = await db.query(
-      'UPDATE city_rates SET city = ?, rate = ? WHERE id = ?',
-      [city, rate, id]
-    );
-
+    const [result] = await db.query('UPDATE city_rates SET city = ? WHERE id = ?', [city, id]);
     if (result.affectedRows === 0)
       return res.status(404).json({ message: 'City not found.' });
 
@@ -44,8 +40,8 @@ exports.updateCityRate = async (req, res) => {
   }
 };
 
-// ===== DELETE city =====
-exports.deleteCityRate = async (req, res) => {
+// Delete city
+exports.deleteCity = async (req, res) => {
   try {
     const { id } = req.params;
     const [result] = await db.query('DELETE FROM city_rates WHERE id = ?', [id]);

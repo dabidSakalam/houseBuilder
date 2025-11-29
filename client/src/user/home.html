@@ -15,7 +15,7 @@
         <div class="user-icon" id="userIcon">👤</div>
         <div class="user-dropdown" id="userDropdown">
           <button>Profile</button>
-          <button>Settings</button>
+          <a href="inbox.html">Inbox</a>
           <button id="logoutBtn">Logout</button>
         </div>
       </div>
@@ -26,7 +26,7 @@
     <!-- Left: Design Section -->
     <section class="design-section">
       <h2>Re-imagine and Explore Your Dream Home</h2>
-      <p>Selection of House Models with personalized estimated pricing for logged-in clients</p>
+      <p>Selection of House Models</p>
       <div class="design-box">
         <model-viewer
           src="../../public/models/Modern/Modern(1F).glb"
@@ -36,7 +36,7 @@
           style="width: 100%; height: 400px;"
         ></model-viewer>
       </div>
-      <button class="btn-primary" id="estimateBtn">Estimate Value</button>
+      <button class="btn-primary" id="estimateBtn">Confirm</button>
     </section>
 
     <!-- Right: Filters -->
@@ -70,30 +70,17 @@
       <label for="city">Location in Cavite</label>
       <select id="city">
         <option selected disabled value="">Select City</option>
-        <!-- Populated dynamically -->
       </select>
     </aside>
   </main>
 
+  <!-- Project Summary Section -->
   <section class="estimate-section">
     <div class="estimate-box">
-      <h3>TOTAL PROJECT ESTIMATE</h3>
-      <h1>----</h1>
-      <p>Estimated timeline: -- months</p><br>
-      <button class="btn-primary">Send to Contractor</button><br>
-      <small>*Estimates are based on the structure only and do not include finishes.<br>They are preliminary and may change depending on site conditions, material selections, and final specifications.</small>
-    </div>
-
-    <div class="estimate-details projectSummary">
-      <div>🛏️ Bedrooms</div>
-      <div>🛁 Bathrooms</div>
-      <div>🎨 Style Category</div>
-      <div>📏 Unit Size</div>
-      <div>🏢 Floors</div>
-      <div>🏡 Features</div>
-      <div>📑 Permit & Fees</div>
-      <div>👷 Labor Est.</div>
-      <div>📐 Design & Planning</div>
+      <h3>Project Summary</h3>
+      <div class="projectSummary"></div>
+      <button class="btn-primary">Send to Contractor</button>
+      <small>*Summary only. Prices removed for display purposes.</small>
     </div>
   </section>
 
@@ -107,8 +94,8 @@
       <p>Connect with professionals who bring your vision to life with quality craftsmanship.</p>
     </div>
     <div class="footer-card">
-      <h3>Personalized Pricing</h3>
-      <p>Get project estimates according to your specifications and location.</p>
+      <h3>Personalized Project</h3>
+      <p>Plan your project according to your specifications and location.</p>
     </div>
   </footer>
 

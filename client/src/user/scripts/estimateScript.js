@@ -1,7 +1,6 @@
 // ===== ELEMENTS =====
 const estimateBtn = document.getElementById('estimateBtn');
 const sendBtn = document.querySelector('.estimate-box .btn-primary');
-const estimateAmount = document.querySelector('.estimate-box h1');
 
 const bedrooms = document.getElementById('bedrooms');
 const bathrooms = document.getElementById('bathrooms');
@@ -16,6 +15,7 @@ const nav = document.querySelector('nav');
 const userIcon = document.getElementById('userIcon');
 const userDropdown = document.getElementById('userDropdown');
 const designBox = document.querySelector('.design-box');
+const projectSummaryElement = document.querySelector('.projectSummary');
 
 // ===== LOGIN CHECK =====
 function isLoggedIn() {
@@ -127,25 +127,6 @@ function validateConstraints() {
   return valid;
 }
 
-// ===== FETCH RATES =====
-let floorRates = {}, bedroomRates = {}, bathroomRates = {}, featureRates = {}, styleRates = {}, cityRates = {};
-
-async function fetchRates() {
-  try {
-    const res = await fetch('http://localhost:3000/api/v1/estimates/rates');
-    if (!res.ok) throw new Error('Failed to fetch rates');
-    const data = await res.json();
-    floorRates = data.floorRates;
-    bedroomRates = data.bedroomRates;
-    bathroomRates = data.bathroomRates;
-    featureRates = data.featureRates; // keyed by ID
-    styleRates = data.styleRates;
-    cityRates = data.cityRates;
-  } catch (err) {
-    console.error(err);
-  }
-}
-
 // ===== FETCH DYNAMIC OPTIONS =====
 async function fetchDynamicOptions() {
   try {
@@ -169,7 +150,6 @@ async function fetchDynamicOptions() {
       featuresContainer.innerHTML = '<p>Features</p>';
       featuresData.forEach(f => {
         const label = document.createElement('label');
-        // ✅ Add class 'feature-checkbox'
         label.innerHTML = `<input type="checkbox" class="feature-checkbox" data-id="${f.feature_id}" /> ${f.name}`;
         featuresContainer.appendChild(label);
       });
@@ -191,103 +171,6 @@ async function fetchDynamicOptions() {
     console.error(err);
   }
 }
-
-// ===== CALCULATION VIA BACKEND =====
-async function calculateTotalFromBackend() {
-  // ✅ Get all selected feature IDs
-  const selectedFeatures = Array.from(document.querySelectorAll('.feature-checkbox'))
-    .filter(cb => cb.checked)
-    .map(cb => Number(cb.dataset.id))
-    .filter(Boolean); // remove invalid IDs
-
-  const payload = {
-    bedrooms: parseInt(bedrooms.value, 10) || 0,
-    bathrooms: parseInt(bathrooms.value, 10) || 0,
-    floors: floors.value,
-    style: style.value,
-    unit: parseFloat(unit.value) || 0,
-    city: city.value,
-    features: selectedFeatures
-  };
-
-  console.log('Selected features sent to backend:', selectedFeatures); // ✅ debug
-
-  try {
-    const res = await fetch('http://localhost:3000/api/v1/estimates/getProjectSummary', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify(payload)
-    });
-
-    if (!res.ok) throw new Error('Failed to get estimate total');
-    const data = await res.json();
-    return data.rawTotal || 0;
-  } catch (err) {
-    console.error(err);
-    return 0;
-  }
-}
-
-
-
-// ===== ESTIMATE BUTTON =====
-estimateBtn.addEventListener('click', async (e) => {
-  e.preventDefault();
-  if (!isLoggedIn()) { showLoginMessage(); return; }
-  if (!validateInputs() || !validateConstraints()) return;
-
-  const totalEstimate = await calculateTotalFromBackend();
-  estimateAmount.textContent = `₱${Number(totalEstimate).toLocaleString()}`;
-  getProjectSummary()
-});
-
-// ===== SEND TO CONTRACTOR =====
-sendBtn.addEventListener('click', async () => {
-  if (!isLoggedIn()) { showLoginMessage(); return; }
-  if (!validateInputs() || !validateConstraints()) return;
-
-  const totalEstimate = await calculateTotalFromBackend();
-  const selectedFeatures = Array.from(featureCheckboxes())
-    .filter(f => f.checked)
-    .map(cb => Number(cb.dataset.id))
-    .filter(Boolean);
-
-  const userId = getUserIdFromToken();
-  if (!userId) { alert("User not found. Please log in again."); return; }
-
-  const styleMap = { "Modern / Contemporary": "Modern", Traditional: "Traditional", Mediterranean: "Mediterranean", Minimalist: "Minimalist" };
-  const floorNameToCount = { "Bungalow (1 Floor)": 1, "Two-Storey": 2, "Three-Storey": 3, "High-Rise (4+ Floors)": 4 };
-  const payload = {
-    userid: userId,
-    bedrooms: parseInt(bedrooms.value, 10),
-    bathrooms: parseInt(bathrooms.value, 10),
-    style: styleMap[style.value] || style.value,
-    floors: floorNameToCount[floors.value] || 1,
-    unit_size: parseFloat(unit.value),
-    city: city.value,
-    total: totalEstimate,
-    features: selectedFeatures
-  };
-
-  try {
-    const res = await fetch('http://localhost:3000/api/v1/estimates/sendToContractor', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await res.json();
-    if (res.ok) alert('Estimate sent to contractor successfully!');
-    else alert(data.message || 'Failed to send estimate.');
-    console.log('Estimate sent:', data);
-  } catch (err) {
-    console.error(err);
-    alert('Error sending estimate. Check console for details.');
-  }
-});
 
 // ===== DESIGN BOX PREVIEW =====
 const floorNameToDb = {
@@ -333,7 +216,7 @@ function showLoginMessage() {
     message.className = 'login-message';
     message.innerHTML = `
       <div class="login-message-box">
-        <p>🔒 Please log in to calculate your estimate.</p>
+        <p>🔒 Please log in to view project summary.</p>
         <a href="login.html" class="btn-primary">Go to Login</a>
       </div>
     `;
@@ -343,25 +226,7 @@ function showLoginMessage() {
   setTimeout(() => message.classList.remove('show'), 2500);
 }
 
-// ===== INITIAL LOAD =====
-fetchRates();
-fetchDynamicOptions();
-updateModelPreview();
-
-const projectSummaryElement = document.querySelector('.projectSummary');
-const projectSummaryHTML = `<div class="estimate-details">
-      <div>🛏️ Bedrooms </div>
-      <div>🛁 Bathrooms</div>
-      <div>🎨 Style Category</div>
-      <div>📏 Unit Size</div>
-      <div>🏢 Floors</div>
-      <div>🏡 Features</div>
-      <div>📑 Permit & Fees</div>
-      <div>👷 Labor Est.</div>
-      <div>📐 Design & Planning</div>
-    </div>`;
-
-
+// ===== GET PROJECT SUMMARY =====
 async function getProjectSummary() {
   const res = await fetch('http://localhost:3000/api/v1/estimates/getProjectSummary', {
     method: 'POST',
@@ -373,7 +238,7 @@ async function getProjectSummary() {
       unit: unit.value,
       floors: floors.value,
       city: city.value,
-      features: Array.from(document.querySelectorAll('.feature-checkbox'))
+      features: Array.from(featureCheckboxes())
         .filter(cb => cb.checked)
         .map(cb => Number(cb.dataset.id))
     })
@@ -387,20 +252,73 @@ async function getProjectSummary() {
 
   const data = await res.json();
 
-  // Generate rows
   const detailsHTML = data.summary
-    .map(item => `
-      <div class="estimate-row">
-        <span class="estimate-label">${item.label}</span>
-        <span class="estimate-price">${item.priceFormatted}</span>
-      </div>
-    `)
+    .map(item => `<div class="estimate-row"><span class="estimate-label">${item.label}</span></div>`)
     .join('');
 
-  projectSummaryElement.innerHTML = `
-    <div class="estimate-details">
-      ${detailsHTML}
-      <hr class="estimate-divider">
-    </div>
-  `;
+  projectSummaryElement.innerHTML = `<div class="estimate-details">${detailsHTML}</div>`;
 }
+
+// ===== ESTIMATE BUTTON =====
+estimateBtn.addEventListener('click', async (e) => {
+  e.preventDefault();
+  if (!isLoggedIn()) { showLoginMessage(); return; }
+  if (!validateInputs() || !validateConstraints()) return;
+
+  // Only show summary
+  await getProjectSummary();
+});
+
+// ===== SEND TO CONTRACTOR / CONFIRM BUTTON =====
+sendBtn.addEventListener('click', async () => {
+  if (!isLoggedIn()) { showLoginMessage(); return; }
+  if (!validateInputs() || !validateConstraints()) return;
+
+  // Show summary
+  await getProjectSummary();
+
+  const selectedFeatures = Array.from(featureCheckboxes())
+    .filter(f => f.checked)
+    .map(cb => Number(cb.dataset.id))
+    .filter(Boolean);
+
+  const userId = getUserIdFromToken();
+  if (!userId) { alert("User not found. Please log in again."); return; }
+
+  const styleMap = { "Modern / Contemporary": "Modern", Traditional: "Traditional", Mediterranean: "Mediterranean", Minimalist: "Minimalist" };
+  const floorNameToCount = { "Bungalow (1 Floor)": 1, "Two-Storey": 2, "Three-Storey": 3, "High-Rise (4+ Floors)": 4 };
+
+  const payload = {
+    userid: userId,
+    bedrooms: parseInt(bedrooms.value, 10),
+    bathrooms: parseInt(bathrooms.value, 10),
+    style: styleMap[style.value] || style.value,
+    floors: floorNameToCount[floors.value] || 1,
+    unit_size: parseFloat(unit.value),
+    city: city.value,
+    features: selectedFeatures
+  };
+
+  try {
+    const res = await fetch('http://localhost:3000/api/v1/estimates/sendInquiry', {
+      method: 'POST',
+      headers: { 
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+    if (res.ok) alert('Inquiry sent successfully! Contractor will review your project.');
+    else alert(data.message || 'Failed to send inquiry.');
+    console.log('Inquiry sent:', data);
+  } catch (err) {
+    console.error(err);
+    alert('Error sending inquiry. Check console for details.');
+  }
+});
+
+// ===== INITIAL LOAD =====
+fetchDynamicOptions();
+updateModelPreview();
