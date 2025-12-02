@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inquiry Details</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: transparent;
+        }
+
+        /* Modal Overlay */
+        .details-modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .details-modal-overlay.active {
+            display: flex;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Modal Container */
+        .details-modal {
+            background: white;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal Header */
+        .details-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 25px 30px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .details-header h2 {
+            margin: 0;
+            font-size: 26px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .close-details-modal {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-details-modal:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: rotate(90deg);
+        }
+
+        /* Modal Body */
+        .details-body {
+            padding: 30px;
+        }
+
+        /* Status Badge */
+        .status-badge-large {
+            display: inline-block;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
+        .status-badge-large.pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .status-badge-large.accepted {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .status-badge-large.cancelled {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .detail-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+
+        .detail-label {
+            font-size: 13px;
+            color: #666;
+            text-transform: uppercase;
+            font-weight: 600;
+            margin-bottom: 8px;
+            display: block;
+        }
+
+        .detail-value {
+            font-size: 18px;
+            color: #333;
+            font-weight: 700;
+        }
+
+        /* Features Section */
+        .features-section {
+            margin-bottom: 30px;
+        }
+
+        .features-section h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 12px;
+        }
+
+        .feature-badge {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        /* Message Section */
+        .message-section {
+            margin-bottom: 30px;
+        }
+
+        .message-section h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .message-box {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+            white-space: pre-wrap;
+        }
+
+        .no-message {
+            color: #999;
+            font-style: italic;
+        }
+
+        /* Images Section */
+        .images-section {
+            margin-bottom: 20px;
+        }
+
+        .images-section h3 {
+            font-size: 18px;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .images-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .image-item {
+            position: relative;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .image-item:hover {
+            transform: scale(1.05);
+        }
+
+        .image-item img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .no-images {
+            color: #999;
+            font-style: italic;
+            padding: 20px;
+            text-align: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .lightbox.active {
+            display: flex;
+        }
+
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            font-size: 40px;
+            color: white;
+            cursor: pointer;
+            background: rgba(255, 255, 255, 0.1);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .lightbox-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Loading State */
+        .loading-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Error State */
+        .error-state {
+            text-align: center;
+            padding: 40px;
+            color: #dc3545;
+        }
+
+        /* Modal Footer */
+        .details-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e0e0e0;
+            text-align: right;
+        }
+
+        .btn-close-details {
+            padding: 12px 30px;
+            background: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-close-details:hover {
+            background: #5a6268;
+        }
+
+        /* Scrollbar Styling */
+        .details-modal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .details-modal::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        .details-modal::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        .details-modal::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Details Modal Overlay -->
+    <div class="details-modal-overlay" id="detailsModal">
+        <div class="details-modal">
+            <!-- Modal Header -->
+            <div class="details-header">
+                <h2>📋 My Inquiry Details</h2>
+                <button class="close-details-modal" id="closeDetailsModal">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="details-body" id="detailsBody">
+                <div class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>Loading inquiry details...</p>
+                </div>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="details-footer">
+                <button class="btn-close-details" id="closeDetailsBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Lightbox for Images -->
+    <div class="lightbox" id="imageLightbox">
+        <span class="lightbox-close" id="lightboxClose">&times;</span>
+        <img id="lightboxImg" src="" alt="Full size image">
+    </div>
+
+    <script>
+        console.log('✅ inquiryDetailsModal.html script loading...');
+
+        const detailsModal = document.getElementById('detailsModal');
+        const detailsBody = document.getElementById('detailsBody');
+        const closeDetailsModal = document.getElementById('closeDetailsModal');
+        const closeDetailsBtn = document.getElementById('closeDetailsBtn');
+        const lightbox = document.getElementById('imageLightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        // Open Modal Function (USER VERSION)
+        async function openDetailsModal(inquiryId) {
+            console.log('🔍 Opening modal for inquiry:', inquiryId);
+
+            detailsModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Show loading state
+            detailsBody.innerHTML = `
+        <div class="loading-state">
+            <div class="loading-spinner"></div>
+            <p>Loading inquiry details...</p>
+        </div>
+    `;
+
+            try {
+                const authToken = localStorage.getItem('authToken');
+
+                console.log('📡 Fetching inquiry details for ID:', inquiryId);
+
+                // ✅ USE EXISTING ADMIN ROUTE
+                const response = await fetch(`http://localhost:3000/api/v1/admin/adminInquiries/${inquiryId}`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+
+                console.log('📡 Response status:', response.status);
+
+                if (!response.ok) {
+                    const contentType = response.headers.get('content-type');
+
+                    if (contentType && contentType.includes('application/json')) {
+                        const errorData = await response.json();
+                        throw new Error(errorData.message || 'Failed to fetch inquiry details');
+                    } else {
+                        throw new Error(`Server error (${response.status})`);
+                    }
+                }
+
+                const inquiry = await response.json();
+                console.log('✅ Inquiry data received:', inquiry);
+                renderInquiryDetails(inquiry);
+
+            } catch (error) {
+                console.error('❌ Error loading inquiry details:', error);
+                detailsBody.innerHTML = `
+            <div class="error-state">
+                <p>❌ Error loading inquiry details</p>
+                <p style="font-size: 14px; color: #999;">${error.message}</p>
+            </div>
+        `;
+            }
+        }
+
+        // Render Inquiry Details
+        function renderInquiryDetails(inquiry) {
+            console.log('🎨 Rendering inquiry details...');
+
+            // Status badge
+            let statusClass = 'pending';
+            let statusText = '⏳ Pending Review';
+
+            if (inquiry.status === 'accepted') {
+                statusClass = 'accepted';
+                statusText = '✅ Accepted';
+            } else if (inquiry.status === 'cancelled') {
+                statusClass = 'cancelled';
+                statusText = '❌ Cancelled';
+            }
+
+            // Parse features
+            let features = inquiry.feature_names || [];
+
+            // Parse design images
+            let designImages = [];
+            if (inquiry.design_images) {
+                try {
+                    if (typeof inquiry.design_images === 'string') {
+                        designImages = JSON.parse(inquiry.design_images);
+                    } else if (Array.isArray(inquiry.design_images)) {
+                        designImages = inquiry.design_images;
+                    }
+                } catch (e) {
+                    console.error('Error parsing design images:', e);
+                    designImages = [];
+                }
+            }
+
+            console.log('📊 Rendering:', {
+                status: inquiry.status,
+                features: features.length,
+                images: designImages.length
+            });
+
+            const html = `
+                <div class="status-badge-large ${statusClass}">
+                    ${statusText}
+                </div>
+
+                <div class="details-grid">
+                    <div class="detail-card">
+                        <span class="detail-label">🎨 Style</span>
+                        <span class="detail-value">${inquiry.style || 'N/A'}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">🛏️ Bedrooms</span>
+                        <span class="detail-value">${inquiry.bedrooms || 'N/A'}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">🛁 Bathrooms</span>
+                        <span class="detail-value">${inquiry.bathrooms || 'N/A'}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">🏢 Floors</span>
+                        <span class="detail-value">${inquiry.floors || 'N/A'}</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">📏 Unit Size</span>
+                        <span class="detail-value">${inquiry.unit_size || 'N/A'} sqm</span>
+                    </div>
+                    <div class="detail-card">
+                        <span class="detail-label">📍 Location</span>
+                        <span class="detail-value">${inquiry.city || 'N/A'}</span>
+                    </div>
+                </div>
+
+                ${features.length > 0 ? `
+                    <div class="features-section">
+                        <h3>✨ Selected Features</h3>
+                        <div class="features-grid">
+                            ${features.map(f => `<div class="feature-badge">${f}</div>`).join('')}
+                        </div>
+                    </div>
+                ` : ''}
+
+                <div class="message-section">
+                    <h3>💬 My Message</h3>
+                    <div class="message-box ${!inquiry.client_message ? 'no-message' : ''}">
+                        ${inquiry.client_message || 'No message provided'}
+                    </div>
+                </div>
+
+                <div class="images-section">
+                    <h3>📷 Design References (${designImages.length})</h3>
+                    ${designImages.length > 0 ? `
+                        <div class="images-grid">
+                            ${designImages.map(img => `
+                                <div class="image-item" onclick="openLightbox('http://localhost:3000${img}')">
+                                    <img src="http://localhost:3000${img}" alt="Design reference">
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : '<div class="no-images">No design images uploaded</div>'}
+                </div>
+            `;
+
+            detailsBody.innerHTML = html;
+            console.log('✅ Render complete');
+        }
+
+        // Close Modal Function
+        function closeDetailsModalFunc() {
+            console.log('🔒 Closing modal');
+            detailsModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+
+            // ✅ HIDE THE PARENT IFRAME TOO
+            if (window.parent && window.parent.document) {
+                const iframe = window.parent.document.getElementById('detailsModalFrame');
+                if (iframe) {
+                    iframe.style.display = 'none';
+                    console.log('✅ Parent iframe hidden');
+                }
+            }
+        }
+
+        // Event Listeners
+        closeDetailsModal.addEventListener('click', closeDetailsModalFunc);
+        closeDetailsBtn.addEventListener('click', closeDetailsModalFunc);
+
+        // Close on outside click
+        detailsModal.addEventListener('click', (e) => {
+            if (e.target === detailsModal) {
+                closeDetailsModalFunc();
+            }
+        });
+
+        // Lightbox Functions
+        function openLightbox(imageSrc) {
+            console.log('🖼️ Opening lightbox for:', imageSrc);
+            lightboxImg.src = imageSrc;
+            lightbox.classList.add('active');
+        }
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+
+        // Close lightbox with ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (lightbox.classList.contains('active')) {
+                    lightbox.classList.remove('active');
+                } else if (detailsModal.classList.contains('active')) {
+                    closeDetailsModalFunc();
+                }
+            }
+        });
+
+        // Export functions to window
+        window.openDetailsModal = openDetailsModal;
+        window.openLightbox = openLightbox;
+
+        console.log('✅ inquiryDetailsModal.html fully loaded');
+        console.log('✅ openDetailsModal function:', typeof openDetailsModal);
+    </script>
+</body>
+
+</html>

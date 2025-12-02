@@ -17,6 +17,11 @@ const userDropdown = document.getElementById('userDropdown');
 const designBox = document.querySelector('.design-box');
 const projectSummaryElement = document.querySelector('.projectSummary');
 
+// ===== SPAM PREVENTION STATE =====
+let isSubmitting = false;
+let lastSubmissionTime = 0;
+const COOLDOWN_PERIOD = 5000; // 5 seconds cooldown between submissions
+
 // ===== LOGIN CHECK =====
 function isLoggedIn() {
   const token = localStorage.getItem('authToken');
@@ -226,6 +231,25 @@ function showLoginMessage() {
   setTimeout(() => message.classList.remove('show'), 2500);
 }
 
+// ===== CLEAR FORM =====
+function clearForm() {
+  bedrooms.value = '';
+  bathrooms.value = '';
+  style.selectedIndex = 0;
+  unit.value = '';
+  floors.selectedIndex = 0;
+  city.selectedIndex = 0;
+  
+  Array.from(featureCheckboxes()).forEach(cb => cb.checked = false);
+  projectSummaryElement.innerHTML = '';
+  
+  [bedrooms, bathrooms, style, unit, floors, city].forEach(input => {
+    input.classList.remove('input-error', 'shake');
+  });
+  
+  updateModelPreview();
+}
+
 // ===== GET PROJECT SUMMARY =====
 async function getProjectSummary() {
   const res = await fetch('http://localhost:3000/api/v1/estimates/getProjectSummary', {
@@ -265,59 +289,92 @@ estimateBtn.addEventListener('click', async (e) => {
   if (!isLoggedIn()) { showLoginMessage(); return; }
   if (!validateInputs() || !validateConstraints()) return;
 
-  // Only show summary
   await getProjectSummary();
 });
 
-// ===== SEND TO CONTRACTOR / CONFIRM BUTTON =====
-sendBtn.addEventListener('click', async () => {
-  if (!isLoggedIn()) { showLoginMessage(); return; }
-  if (!validateInputs() || !validateConstraints()) return;
+// ===== SEND TO CONTRACTOR BUTTON - OPENS MODAL ONLY =====
+sendBtn.addEventListener('click', async (e) => {
+  e.preventDefault();
+  
+  // Check if logged in
+  if (!isLoggedIn()) { 
+    showLoginMessage(); 
+    return; 
+  }
+  
+  // Validate form first
+  if (!validateInputs() || !validateConstraints()) {
+    alert('⚠️ Please fill in all required fields correctly before proceeding.');
+    return;
+  }
+  
+  // Check cooldown to prevent spam
+  const now = Date.now();
+  const timeSinceLastSubmit = now - lastSubmissionTime;
+  if (timeSinceLastSubmit < COOLDOWN_PERIOD) {
+    const remainingSeconds = Math.ceil((COOLDOWN_PERIOD - timeSinceLastSubmit) / 1000);
+    alert(`⏰ Please wait ${remainingSeconds} seconds before submitting another inquiry.`);
+    return;
+  }
 
-  // Show summary
+  // Generate project summary first
   await getProjectSummary();
 
-  const selectedFeatures = Array.from(featureCheckboxes())
-    .filter(f => f.checked)
-    .map(cb => Number(cb.dataset.id))
-    .filter(Boolean);
+  // ✅ ONLY OPEN MODAL - DO NOT SUBMIT YET
+  if (typeof openInquiryModal === 'function') {
+    openInquiryModal();
+  } else {
+    console.error('❌ openInquiryModal function not found!');
+    alert('⚠️ Modal is not loaded. Please refresh the page.');
+  }
+});
 
-  const userId = getUserIdFromToken();
-  if (!userId) { alert("User not found. Please log in again."); return; }
+// ===== EXPOSE FUNCTION FOR MODAL TO GET FORM DATA =====
+window.getInquiryFormData = function() {
+  const styleMap = { 
+    "Modern / Contemporary": "Modern", 
+    Traditional: "Traditional", 
+    Mediterranean: "Mediterranean", 
+    Minimalist: "Minimalist" 
+  };
+  
+  const floorNameToCount = { 
+    "Bungalow (1 Floor)": 1, 
+    "Two-Storey": 2, 
+    "Three-Storey": 3, 
+    "High-Rise (4+ Floors)": 4 
+  };
 
-  const styleMap = { "Modern / Contemporary": "Modern", Traditional: "Traditional", Mediterranean: "Mediterranean", Minimalist: "Minimalist" };
-  const floorNameToCount = { "Bungalow (1 Floor)": 1, "Two-Storey": 2, "Three-Storey": 3, "High-Rise (4+ Floors)": 4 };
-
-  const payload = {
-    userid: userId,
+  return {
+    userid: getUserIdFromToken(),
     bedrooms: parseInt(bedrooms.value, 10),
     bathrooms: parseInt(bathrooms.value, 10),
     style: styleMap[style.value] || style.value,
     floors: floorNameToCount[floors.value] || 1,
     unit_size: parseFloat(unit.value),
     city: city.value,
-    features: selectedFeatures
+    features: Array.from(featureCheckboxes())
+      .filter(cb => cb.checked)
+      .map(cb => Number(cb.dataset.id))
+      .filter(Boolean)
   };
+};
 
-  try {
-    const res = await fetch('http://localhost:3000/api/v1/estimates/sendInquiry', {
-      method: 'POST',
-      headers: { 
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${localStorage.getItem('authToken')}`
-      },
-      body: JSON.stringify(payload)
-    });
+// ===== SUCCESS CALLBACK FROM MODAL =====
+window.onInquirySuccess = function() {
+  lastSubmissionTime = Date.now();
+  clearForm();
+  alert('Thank you! Please check your Profile to see your inquiries status.');
+};
 
-    const data = await res.json();
-    if (res.ok) alert('Inquiry sent successfully! Contractor will review your project.');
-    else alert(data.message || 'Failed to send inquiry.');
-    console.log('Inquiry sent:', data);
-  } catch (err) {
-    console.error(err);
-    alert('Error sending inquiry. Check console for details.');
-  }
-});
+// ===== CHECK IF CURRENTLY SUBMITTING =====
+window.isCurrentlySubmitting = function() {
+  return isSubmitting;
+};
+
+window.setSubmittingState = function(state) {
+  isSubmitting = state;
+};
 
 // ===== INITIAL LOAD =====
 fetchDynamicOptions();

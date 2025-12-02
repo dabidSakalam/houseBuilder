@@ -26,11 +26,13 @@ const passwordInput = document.getElementById("password");
     } else {
       // Token expired, remove it
       localStorage.removeItem("authToken");
+      localStorage.removeItem("userId");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("isLoggedIn");
     }
   } catch (err) {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
     localStorage.removeItem("userEmail");
     localStorage.removeItem("isLoggedIn");
   }
@@ -47,11 +49,13 @@ const passwordInput = document.getElementById("password");
     const now = Math.floor(Date.now() / 1000);
     if (decodedPayload.exp && decodedPayload.exp < now) {
       localStorage.removeItem("authToken");
+      localStorage.removeItem("userId");
       localStorage.removeItem("userEmail");
       localStorage.removeItem("isLoggedIn");
     }
   } catch (err) {
     localStorage.removeItem("authToken");
+    localStorage.removeItem("userId");
   }
 })();
 
@@ -84,7 +88,17 @@ loginForm.addEventListener("submit", async (e) => {
 
     if (data.token) {
       localStorage.setItem("authToken", data.token);
+      
+      // ✅ Decode JWT token to get userId
+      try {
+        const payloadBase64 = data.token.split('.')[1];
+        const decodedPayload = JSON.parse(atob(payloadBase64));
+        localStorage.setItem("userId", decodedPayload.user_id);
+      } catch (err) {
+        console.error("Error decoding token:", err);
+      }
     }
+    
     localStorage.setItem("isLoggedIn", "true");
     localStorage.setItem("userEmail", email);
 

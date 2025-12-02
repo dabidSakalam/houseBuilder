@@ -6,6 +6,217 @@
   <title>HouseBuilder - Project Estimate</title>
   <link rel="stylesheet" href="./styles/home.css" />
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+  
+  <!-- ===== MODAL STYLES ===== -->
+  <style>
+    /* Modal Overlay */
+    .modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 9999;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modal-overlay.active {
+        display: flex;
+    }
+
+    /* Modal Container */
+    .inquiry-modal {
+        background: white;
+        width: 90%;
+        max-width: 600px;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 12px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from {
+            transform: translateY(-50px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+
+    /* Modal Header */
+    .modal-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px 30px;
+        border-radius: 12px 12px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-header h2 {
+        margin: 0;
+        font-size: 24px;
+    }
+
+    .close-modal {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 28px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .close-modal:hover {
+        transform: rotate(90deg);
+    }
+
+    /* Modal Body */
+    .modal-body {
+        padding: 30px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 14px;
+        font-family: inherit;
+        resize: vertical;
+        min-height: 120px;
+        transition: border-color 0.3s;
+        box-sizing: border-box;
+    }
+
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    /* Image Upload */
+    .image-upload-area {
+        border: 2px dashed #ccc;
+        border-radius: 8px;
+        padding: 30px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: #f9f9f9;
+    }
+
+    .image-upload-area:hover {
+        border-color: #667eea;
+        background: #f0f4ff;
+    }
+
+    .upload-icon {
+        font-size: 48px;
+        color: #667eea;
+        margin-bottom: 10px;
+    }
+
+    #imageInput {
+        display: none;
+    }
+
+    /* Image Preview */
+    .image-preview-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .image-preview-item {
+        position: relative;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .image-preview-item img {
+        width: 100%;
+        height: 120px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .remove-image {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        background: rgba(255, 0, 0, 0.8);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 25px;
+        height: 25px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    /* Modal Footer */
+    .modal-footer {
+        padding: 20px 30px;
+        border-top: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: flex-end;
+        gap: 15px;
+    }
+
+    .btn {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .btn-cancel {
+        background: #f0f0f0;
+        color: #666;
+    }
+
+    .btn-submit {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-submit:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .char-counter {
+        text-align: right;
+        font-size: 12px;
+        color: #999;
+        margin-top: 5px;
+    }
+  </style>
 </head>
 <body>
   <header class="navbar">
@@ -14,7 +225,7 @@
       <div class="user-menu">
         <div class="user-icon" id="userIcon">👤</div>
         <div class="user-dropdown" id="userDropdown">
-          <button>Profile</button>
+          <button onclick="window.location.href='profile.html'">Profile</button>
           <a href="inbox.html">Inbox</a>
           <button id="logoutBtn">Logout</button>
         </div>
@@ -98,6 +309,202 @@
       <p>Plan your project according to your specifications and location.</p>
     </div>
   </footer>
+
+  <!-- ===== INQUIRY MODAL (EMBEDDED) ===== -->
+  <div class="modal-overlay" id="inquiryModal">
+    <div class="inquiry-modal">
+      <div class="modal-header">
+        <h2>📝 Add Details to Your Inquiry</h2>
+        <button class="close-modal" id="closeModal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="inquiryDetailsForm">
+          <div class="form-group">
+            <label for="clientMessage">
+              Your Message <span style="color: #999;">(Optional)</span>
+            </label>
+            <textarea 
+              id="clientMessage" 
+              placeholder="Tell us more about your dream house..."
+              maxlength="1000"
+            ></textarea>
+            <div class="char-counter">
+              <span id="charCount">0</span> / 1000 characters
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label>Design References / Images <span style="color: #999;">(Optional)</span></label>
+            <div class="image-upload-area" id="uploadArea">
+              <div class="upload-icon">📷</div>
+              <p><strong>Click to upload</strong> or drag and drop</p>
+              <small>PNG, JPG up to 5MB (Max 5 images)</small>
+            </div>
+            <input type="file" id="imageInput" accept="image/png, image/jpeg, image/jpg" multiple>
+            <div class="image-preview-container" id="imagePreview"></div>
+          </div>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+        <button type="button" class="btn btn-submit" id="submitInquiryBtn">Submit Inquiry</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== MODAL SCRIPT ===== -->
+  <script>
+    const modal = document.getElementById('inquiryModal');
+    const closeModalBtn = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const submitBtn = document.getElementById('submitInquiryBtn');
+    const uploadArea = document.getElementById('uploadArea');
+    const imageInput = document.getElementById('imageInput');
+    const imagePreview = document.getElementById('imagePreview');
+    const clientMessage = document.getElementById('clientMessage');
+    const charCount = document.getElementById('charCount');
+
+    let selectedImages = [];
+    const MAX_IMAGES = 5;
+    const MAX_SIZE = 5 * 1024 * 1024;
+
+    // Character Counter
+    clientMessage.addEventListener('input', () => {
+      charCount.textContent = clientMessage.value.length;
+    });
+
+    // Open Modal
+    function openInquiryModal() {
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    // Close Modal
+    function closeInquiryModal() {
+      modal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+      clientMessage.value = '';
+      charCount.textContent = '0';
+      selectedImages = [];
+      imagePreview.innerHTML = '';
+      imageInput.value = '';
+    }
+
+    closeModalBtn.addEventListener('click', closeInquiryModal);
+    cancelBtn.addEventListener('click', closeInquiryModal);
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeInquiryModal();
+    });
+
+    // Upload Area
+    uploadArea.addEventListener('click', () => imageInput.click());
+
+    uploadArea.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#667eea';
+    });
+
+    uploadArea.addEventListener('dragleave', () => {
+      uploadArea.style.borderColor = '#ccc';
+    });
+
+    uploadArea.addEventListener('drop', (e) => {
+      e.preventDefault();
+      uploadArea.style.borderColor = '#ccc';
+      handleFiles(e.dataTransfer.files);
+    });
+
+    imageInput.addEventListener('change', (e) => handleFiles(e.target.files));
+
+    function handleFiles(files) {
+      const validFiles = Array.from(files).filter(file => {
+        if (!file.type.match('image/(jpeg|png)')) {
+          alert('Only JPG and PNG allowed');
+          return false;
+        }
+        if (file.size > MAX_SIZE) {
+          alert(`${file.name} is too large (max 5MB)`);
+          return false;
+        }
+        return true;
+      });
+
+      if (selectedImages.length + validFiles.length > MAX_IMAGES) {
+        alert(`Max ${MAX_IMAGES} images allowed`);
+        return;
+      }
+
+      validFiles.forEach(file => {
+        selectedImages.push(file);
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const div = document.createElement('div');
+          div.className = 'image-preview-item';
+          div.innerHTML = `
+            <img src="${e.target.result}" alt="Preview">
+            <button class="remove-image" data-filename="${file.name}">×</button>
+          `;
+          imagePreview.appendChild(div);
+
+          div.querySelector('.remove-image').addEventListener('click', function() {
+            selectedImages = selectedImages.filter(img => img.name !== this.dataset.filename);
+            div.remove();
+          });
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // Submit
+    submitBtn.addEventListener('click', async () => {
+      const inquiryData = window.getInquiryFormData();
+      if (!inquiryData) {
+        alert('Please fill the form first');
+        return;
+      }
+
+      const formData = new FormData();
+      Object.keys(inquiryData).forEach(key => {
+        formData.append(key, key === 'features' ? JSON.stringify(inquiryData[key]) : inquiryData[key]);
+      });
+      formData.append('clientMessage', clientMessage.value.trim());
+      selectedImages.forEach(img => formData.append('designImages', img));
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Sending...';
+
+      try {
+        const res = await fetch('http://localhost:3000/api/v1/estimates/submit', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
+          body: formData
+        });
+
+        const data = await res.json();
+        if (res.ok) {
+          alert('✅ Inquiry submitted successfully!');
+          closeInquiryModal();
+          if (typeof window.onInquirySuccess === 'function') {
+            window.onInquirySuccess();
+          }
+          setTimeout(() => window.location.href = 'inbox.html', 1500);
+        } else {
+          alert('❌ ' + (data.message || 'Failed to submit'));
+        }
+      } catch (err) {
+        console.error(err);
+        alert('❌ An error occurred');
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Inquiry';
+      }
+    });
+
+    // Export function
+    window.openInquiryModal = openInquiryModal;
+  </script>
 
   <script type="module" src="./scripts/estimateScript.js"></script>
 </body>

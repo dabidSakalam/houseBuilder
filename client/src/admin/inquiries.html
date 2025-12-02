@@ -1,12 +1,307 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin - Project Inquiries</title>
   <link rel="stylesheet" href="./styles/inquiries.css">
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script src="./scripts/checkAdminLogin.js"></script>
+  
+  <!-- Details Modal Styles -->
+  <style>
+    .details-modal-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.8);
+        z-index: 10000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .details-modal-overlay.active {
+        display: flex;
+    }
+
+    .details-modal {
+        background: white;
+        width: 100%;
+        max-width: 900px;
+        max-height: 90vh;
+        overflow-y: auto;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        animation: modalSlide 0.3s ease;
+    }
+
+    @keyframes modalSlide {
+        from {
+            transform: translateY(-50px) scale(0.9);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0) scale(1);
+            opacity: 1;
+        }
+    }
+
+    .details-header {
+        background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+        color: white;
+        padding: 25px 30px;
+        border-radius: 16px 16px 0 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .details-header h2 {
+        margin: 0;
+        font-size: 26px;
+        font-weight: 600;
+    }
+
+    .close-details {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: white;
+        font-size: 24px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .close-details:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
+
+    .details-body {
+        padding: 30px;
+    }
+
+    .detail-section {
+        margin-bottom: 30px;
+        padding-bottom: 25px;
+        border-bottom: 1px solid #e0e0e0;
+    }
+
+    .detail-section:last-child {
+        border-bottom: none;
+    }
+
+    .section-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #1e3c72;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .user-info-card {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 20px;
+        border-radius: 12px;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .info-item {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .info-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        margin-bottom: 5px;
+        font-weight: 600;
+    }
+
+    .info-value {
+        font-size: 16px;
+        color: #1e3c72;
+        font-weight: 500;
+    }
+
+    .property-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 20px;
+    }
+
+    .property-item {
+        background: #f9fafb;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        border: 2px solid #e5e7eb;
+        transition: all 0.3s;
+    }
+
+    .property-item:hover {
+        border-color: #1e3c72;
+        transform: translateY(-2px);
+    }
+
+    .property-icon {
+        font-size: 32px;
+        margin-bottom: 10px;
+    }
+
+    .property-value {
+        font-size: 20px;
+        font-weight: 700;
+        color: #1e3c72;
+    }
+
+    .features-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .feature-tag {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+    }
+
+    .message-box {
+        background: #fffbeb;
+        border-left: 4px solid #f59e0b;
+        padding: 20px;
+        border-radius: 8px;
+        line-height: 1.6;
+    }
+
+    .message-box.empty {
+        background: #f3f4f6;
+        border-left-color: #9ca3af;
+        font-style: italic;
+    }
+
+    .images-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .image-item {
+        position: relative;
+        border-radius: 12px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: transform 0.3s;
+    }
+
+    .image-item:hover {
+        transform: scale(1.05);
+    }
+
+    .image-item img {
+        width: 100%;
+        height: 200px;
+        object-fit: cover;
+    }
+
+    .zoom-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0, 0, 0, 0.6);
+        color: white;
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .no-images {
+        text-align: center;
+        padding: 40px;
+        color: #9ca3af;
+        font-style: italic;
+    }
+
+    .status-badge {
+        display: inline-block;
+        padding: 6px 16px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 600;
+    }
+
+    .status-badge.pending {
+        background: #fef3c7;
+        color: #92400e;
+    }
+
+    .status-badge.accepted {
+        background: #d1fae5;
+        color: #065f46;
+    }
+
+    .status-badge.rejected {
+        background: #fee2e2;
+        color: #991b1b;
+    }
+
+    .image-lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.95);
+        z-index: 10001;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .image-lightbox.active {
+        display: flex;
+    }
+
+    .image-lightbox img {
+        max-width: 90%;
+        max-height: 90%;
+        border-radius: 8px;
+    }
+
+    .lightbox-close-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: white;
+        color: black;
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        font-size: 28px;
+        cursor: pointer;
+    }
+  </style>
 </head>
+
 <body>
   <header class="admin-header">
     <h1>Inquiries</h1>
@@ -37,6 +332,7 @@
             <th>Unit Size (sqm)</th>
             <th>Features</th>
             <th>City</th>
+            <th>Status</th>
             <th>Created Date</th>
             <th>Actions</th>
           </tr>
@@ -54,13 +350,260 @@
       <span class="close-btn">&times;</span>
       <h2>Messages</h2>
       <div id="chatContainer" class="chat-container"></div>
+      <div id="imagePreview" style="display: none;" class="image-preview">
+        <img id="previewImg" src="" alt="Preview">
+        <div class="remove-preview" id="removePreview">×</div>
+      </div>
       <div class="chat-input">
+        <div class="file-input-wrapper">
+          <input type="file" id="imgInput" accept="image/*">
+          <label for="imgInput" class="file-label" id="fileLabel">🔎</label>
+        </div>
         <input type="text" id="msgInput" placeholder="Type a message...">
         <button id="sendMsgBtn">Send</button>
       </div>
     </div>
   </div>
 
-  <script type="module" src="./scripts/inquiries.js"></script>
+  <!-- Lightbox for Chat Images -->
+  <div id="lightbox" class="lightbox">
+    <span class="lightbox-close">&times;</span>
+    <img id="lightboxImg" src="" alt="Full Image">
+  </div>
+
+  <!-- ===== DETAILS MODAL (EMBEDDED) ===== -->
+  <div class="details-modal-overlay" id="detailsModal">
+    <div class="details-modal">
+      <div class="details-header">
+        <h2>📋 Inquiry Details</h2>
+        <button class="close-details" id="closeDetails">&times;</button>
+      </div>
+      <div class="details-body" id="detailsContent">
+        <div style="text-align: center; padding: 60px;">
+          <p>Loading details...</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Lightbox for Details Modal -->
+  <div class="image-lightbox" id="imageLightbox">
+    <button class="lightbox-close-btn" id="closeLightboxBtn">&times;</button>
+    <img id="lightboxImage" src="" alt="Full size">
+  </div>
+
+  <!-- Details Modal Script -->
+  <script>
+    const detailsModal = document.getElementById('detailsModal');
+    const closeDetailsBtn = document.getElementById('closeDetails');
+    const detailsContent = document.getElementById('detailsContent');
+    const imageLightbox = document.getElementById('imageLightbox');
+    const lightboxImage = document.getElementById('lightboxImage');
+    const closeLightboxBtn = document.getElementById('closeLightboxBtn');
+
+    // Open Details Modal
+    async function openDetailsModal(inquiryId) {
+      detailsModal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+
+      try {
+        const token = localStorage.getItem('adminToken') || localStorage.getItem('token');
+        const response = await fetch(`http://localhost:3000/api/v1/estimates/inquiries/${inquiryId}/details`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch details');
+        }
+
+        const inquiry = await response.json();
+        renderInquiryDetails(inquiry);
+
+      } catch (error) {
+        console.error('Error fetching inquiry details:', error);
+        detailsContent.innerHTML = `
+          <div style="text-align: center; padding: 60px; color: #ef4444;">
+            <p style="font-size: 48px;">⚠️</p>
+            <p style="font-size: 18px; font-weight: 600;">Failed to load details</p>
+            <p style="color: #6b7280; margin-top: 10px;">Please try again</p>
+          </div>
+        `;
+      }
+    }
+
+    // Render Inquiry Details
+    function renderInquiryDetails(inquiry) {
+      const hasMessage = inquiry.client_message && inquiry.client_message.trim();
+      
+      // Parse design_images if it's a string
+      let designImages = [];
+      if (inquiry.design_images) {
+        try {
+          designImages = typeof inquiry.design_images === 'string' 
+            ? JSON.parse(inquiry.design_images) 
+            : inquiry.design_images;
+        } catch (e) {
+          console.error('Error parsing design_images:', e);
+          designImages = [];
+        }
+      }
+      
+      const hasImages = designImages && Array.isArray(designImages) && designImages.length > 0;
+      
+      console.log('Design Images:', designImages); // Debug log
+
+      detailsContent.innerHTML = `
+        <div class="detail-section">
+          <div class="section-title">
+            <span>👤</span>
+            Client Information
+          </div>
+          <div class="user-info-card">
+            <div class="info-item">
+              <span class="info-label">Name</span>
+              <span class="info-value">${inquiry.user_name || 'N/A'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Email</span>
+              <span class="info-value">${inquiry.user_email || 'N/A'}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Status</span>
+              <span class="status-badge ${inquiry.status}">${inquiry.status}</span>
+            </div>
+            <div class="info-item">
+              <span class="info-label">Inquiry Date</span>
+              <span class="info-value">${new Date(inquiry.created_at).toLocaleDateString()}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="section-title">
+            <span>🏠</span>
+            Property Specifications
+          </div>
+          <div class="property-grid">
+            <div class="property-item">
+              <div class="property-icon">🛏️</div>
+              <div>Bedrooms</div>
+              <div class="property-value">${inquiry.bedrooms}</div>
+            </div>
+            <div class="property-item">
+              <div class="property-icon">🚿</div>
+              <div>Bathrooms</div>
+              <div class="property-value">${inquiry.bathrooms}</div>
+            </div>
+            <div class="property-item">
+              <div class="property-icon">🏢</div>
+              <div>Floors</div>
+              <div class="property-value">${inquiry.floors}</div>
+            </div>
+            <div class="property-item">
+              <div class="property-icon">📐</div>
+              <div>Unit Size</div>
+              <div class="property-value">${inquiry.unit_size} m²</div>
+            </div>
+            <div class="property-item">
+              <div class="property-icon">🎨</div>
+              <div>Style</div>
+              <div class="property-value">${inquiry.style}</div>
+            </div>
+            <div class="property-item">
+              <div class="property-icon">📍</div>
+              <div>City</div>
+              <div class="property-value">${inquiry.city}</div>
+            </div>
+          </div>
+        </div>
+
+        ${inquiry.feature_names && inquiry.feature_names.length > 0 ? `
+        <div class="detail-section">
+          <div class="section-title">
+            <span>✨</span>
+            Additional Features
+          </div>
+          <div class="features-list">
+            ${inquiry.feature_names.map(feature => `
+              <span class="feature-tag">${feature}</span>
+            `).join('')}
+          </div>
+        </div>
+        ` : ''}
+
+        <div class="detail-section">
+          <div class="section-title">
+            <span>💬</span>
+            Client Message
+          </div>
+          <div class="message-box ${!hasMessage ? 'empty' : ''}">
+            ${hasMessage ? inquiry.client_message : 'No message provided'}
+          </div>
+        </div>
+
+        <div class="detail-section">
+          <div class="section-title">
+            <span>🖼️</span>
+            Design References
+          </div>
+          ${hasImages ? `
+            <div class="images-grid">
+              ${designImages.map(imagePath => {
+                // Handle both absolute and relative paths
+                const fullPath = imagePath.startsWith('http') 
+                  ? imagePath 
+                  : `http://localhost:3000${imagePath}`;
+                return `
+                  <div class="image-item" onclick="openImageLightbox('${fullPath}')">
+                    <img src="${fullPath}" alt="Design reference" onerror="this.parentElement.innerHTML='<div style=\\'padding:20px;text-align:center;\\'>❌ Image failed to load</div>'">
+                    <div class="zoom-icon">🔍</div>
+                  </div>
+                `;
+              }).join('')}
+            </div>
+          ` : `
+            <div class="no-images">
+              📷 No design images uploaded
+            </div>
+          `}
+        </div>
+      `;
+    }
+
+    // Close Details Modal
+    function closeDetailsModal() {
+      detailsModal.classList.remove('active');
+      document.body.style.overflow = 'auto';
+    }
+
+    closeDetailsBtn.addEventListener('click', closeDetailsModal);
+    detailsModal.addEventListener('click', (e) => {
+      if (e.target === detailsModal) closeDetailsModal();
+    });
+
+    // Image Lightbox
+    function openImageLightbox(imageSrc) {
+      lightboxImage.src = imageSrc;
+      imageLightbox.classList.add('active');
+    }
+
+    function closeImageLightbox() {
+      imageLightbox.classList.remove('active');
+    }
+
+    closeLightboxBtn.addEventListener('click', closeImageLightbox);
+    imageLightbox.addEventListener('click', (e) => {
+      if (e.target === imageLightbox) closeImageLightbox();
+    });
+
+    // Export function
+    window.openDetailsModal = openDetailsModal;
+  </script>
+
+  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+  <script src="./scripts/inquiries.js"></script>
 </body>
+
 </html>

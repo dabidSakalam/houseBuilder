@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Profile - HouseBuilder</title>
+  <link rel="stylesheet" href="./styles/profile.css" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="logo">🏠 <strong><a href="./home.html">HouseBuilder</a></strong></div>
+    <nav>
+      <a href="./home.html" class="back-btn">← Back to Home</a>
+    </nav>
+  </header>
+
+  <main class="profile-container">
+    <!-- Profile Info Section -->
+    <section class="profile-info">
+      <div class="profile-header">
+        <div class="profile-avatar">👤</div>
+        <h2>My Profile</h2>
+      </div>
+
+      <div class="info-card">
+        <div class="info-row">
+          <span class="info-label">📧 Email:</span>
+          <span class="info-value" id="userEmail">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">👤 Name:</span>
+          <span class="info-value" id="userName">Loading...</span>
+        </div>
+        <div class="info-row">
+          <span class="info-label">📅 Member Since:</span>
+          <span class="info-value" id="memberSince">Loading...</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Inquiry History Section -->
+    <section class="inquiry-history">
+      <h2>📋 My Inquiry History</h2>
+      <div class="history-container" id="historyContainer">
+        <div class="loading">Loading your inquiries...</div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 HouseBuilder. All rights reserved.</p>
+  </footer>
+
+  <iframe id="detailsModalFrame" src="../admin/inquiriesDetailsModal.html"
+    style="display:none; border:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999;">
+  </iframe>
+
+  <script type="module" src="./scripts/profile.js"></script>
+</body>
+
+</html>

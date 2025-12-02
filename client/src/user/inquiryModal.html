@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Inquiry</title>
+    <style>
+        /* Modal Overlay */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        /* Modal Container */
+        .inquiry-modal {
+            background: white;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        /* Modal Header */
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 28px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .close-modal:hover {
+            transform: rotate(90deg);
+        }
+
+        /* Modal Body */
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 14px;
+        }
+
+        .form-group textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            resize: vertical;
+            min-height: 120px;
+            transition: border-color 0.3s;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        /* Image Upload */
+        .image-upload-area {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 30px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background: #f9f9f9;
+        }
+
+        .image-upload-area:hover {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .image-upload-area.dragover {
+            border-color: #667eea;
+            background: #e8f0ff;
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        .image-upload-area p {
+            margin: 10px 0 5px 0;
+            color: #666;
+            font-size: 14px;
+        }
+
+        .image-upload-area small {
+            color: #999;
+            font-size: 12px;
+        }
+
+        #imageInput {
+            display: none;
+        }
+
+        /* Image Preview */
+        .image-preview-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .image-preview-item {
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .image-preview-item img {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .remove-image {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(255, 0, 0, 0.8);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+
+        .remove-image:hover {
+            background: rgba(255, 0, 0, 1);
+        }
+
+        /* Modal Footer */
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid #e0e0e0;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+        }
+
+        .btn {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-cancel {
+            background: #f0f0f0;
+            color: #666;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-submit:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Character Counter */
+        .char-counter {
+            text-align: right;
+            font-size: 12px;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        /* Loading Spinner */
+        .loading-spinner {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .btn-submit.loading .loading-spinner {
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <!-- Modal Overlay -->
+    <div class="modal-overlay" id="inquiryModal">
+        <div class="inquiry-modal">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <h2>📝 Add Details to Your Inquiry</h2>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <form id="inquiryDetailsForm">
+                    <!-- Message Textbox -->
+                    <div class="form-group">
+                        <label for="clientMessage">
+                            Your Message <span style="color: #999;">(Optional)</span>
+                        </label>
+                        <textarea 
+                            id="clientMessage" 
+                            name="clientMessage"
+                            placeholder="Tell us more about your dream house... Any specific requirements, preferences, or ideas you'd like to share?"
+                            maxlength="1000"
+                        ></textarea>
+                        <div class="char-counter">
+                            <span id="charCount">0</span> / 1000 characters
+                        </div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="form-group">
+                        <label>Design References / Images <span style="color: #999;">(Optional)</span></label>
+                        <div class="image-upload-area" id="uploadArea">
+                            <div class="upload-icon">📷</div>
+                            <p><strong>Click to upload</strong> or drag and drop</p>
+                            <small>PNG, JPG up to 5MB (Max 5 images)</small>
+                        </div>
+                        <input 
+                            type="file" 
+                            id="imageInput" 
+                            accept="image/png, image/jpeg, image/jpg"
+                            multiple
+                        >
+                        
+                        <!-- Image Preview -->
+                        <div class="image-preview-container" id="imagePreview"></div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Modal Footer -->
+            <div class="modal-footer">
+                <button type="button" class="btn btn-cancel" id="cancelBtn">Cancel</button>
+                <button type="button" class="btn btn-submit" id="submitInquiryBtn">
+                    Submit Inquiry
+                    <span class="loading-spinner"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Modal Elements
+        const modal = document.getElementById('inquiryModal');
+        const closeModalBtn = document.getElementById('closeModal');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const submitBtn = document.getElementById('submitInquiryBtn');
+        const uploadArea = document.getElementById('uploadArea');
+        const imageInput = document.getElementById('imageInput');
+        const imagePreview = document.getElementById('imagePreview');
+        const clientMessage = document.getElementById('clientMessage');
+        const charCount = document.getElementById('charCount');
+
+        let selectedImages = [];
+        const MAX_IMAGES = 5;
+        const MAX_SIZE = 5 * 1024 * 1024; // 5MB
+
+        // Character Counter
+        clientMessage.addEventListener('input', () => {
+            charCount.textContent = clientMessage.value.length;
+        });
+
+        // Open Modal Function
+        function openInquiryModal() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Close Modal Function
+        function closeInquiryModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            resetForm();
+        }
+
+        // Reset Form
+        function resetForm() {
+            clientMessage.value = '';
+            charCount.textContent = '0';
+            selectedImages = [];
+            imagePreview.innerHTML = '';
+            imageInput.value = '';
+        }
+
+        // Event Listeners
+        closeModalBtn.addEventListener('click', closeInquiryModal);
+        cancelBtn.addEventListener('click', closeInquiryModal);
+
+        // Close on outside click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) closeInquiryModal();
+        });
+
+        // Upload Area Click
+        uploadArea.addEventListener('click', () => {
+            imageInput.click();
+        });
+
+        // Drag and Drop
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            handleFiles(e.dataTransfer.files);
+        });
+
+        // File Input Change
+        imageInput.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
+
+        // Handle Files
+        function handleFiles(files) {
+            const validFiles = Array.from(files).filter(file => {
+                // Check file type
+                if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+                    alert('Only JPG and PNG images are allowed');
+                    return false;
+                }
+                // Check file size
+                if (file.size > MAX_SIZE) {
+                    alert(`${file.name} is too large. Max size is 5MB`);
+                    return false;
+                }
+                return true;
+            });
+
+            // Check max images
+            if (selectedImages.length + validFiles.length > MAX_IMAGES) {
+                alert(`You can only upload ${MAX_IMAGES} images maximum`);
+                return;
+            }
+
+            validFiles.forEach(file => {
+                selectedImages.push(file);
+                displayImagePreview(file);
+            });
+        }
+
+        // Display Image Preview
+        function displayImagePreview(file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const div = document.createElement('div');
+                div.className = 'image-preview-item';
+                div.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <button type="button" class="remove-image" data-filename="${file.name}">×</button>
+                `;
+                imagePreview.appendChild(div);
+
+                // Remove image handler
+                div.querySelector('.remove-image').addEventListener('click', function() {
+                    const filename = this.dataset.filename;
+                    selectedImages = selectedImages.filter(img => img.name !== filename);
+                    div.remove();
+                });
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // Submit Inquiry
+        submitBtn.addEventListener('click', async () => {
+            // Get inquiry data from parent window (home.html)
+            let inquiryData;
+            
+            // Check if we're in iframe or directly embedded
+            if (window.parent && window.parent !== window && typeof window.parent.getInquiryFormData === 'function') {
+                inquiryData = window.parent.getInquiryFormData();
+            } else if (typeof window.getInquiryFormData === 'function') {
+                inquiryData = window.getInquiryFormData();
+            } else {
+                alert('Error: Cannot get form data');
+                return;
+            }
+
+            if (!inquiryData) {
+                alert('Error: Form data is empty');
+                return;
+            }
+
+            // Validate required fields
+            if (!inquiryData.bedrooms || !inquiryData.bathrooms || !inquiryData.floors) {
+                alert('Please fill in all required fields in the form first');
+                return;
+            }
+
+            const formData = new FormData();
+            
+            // Add all inquiry fields
+            formData.append('userid', inquiryData.userid);
+            formData.append('bedrooms', inquiryData.bedrooms);
+            formData.append('bathrooms', inquiryData.bathrooms);
+            formData.append('floors', inquiryData.floors);
+            formData.append('style', inquiryData.style);
+            formData.append('unit_size', inquiryData.unit_size);
+            formData.append('city', inquiryData.city);
+            formData.append('features', JSON.stringify(inquiryData.features));
+
+            // Add message
+            formData.append('clientMessage', clientMessage.value.trim());
+
+            // Add images
+            selectedImages.forEach(image => {
+                formData.append('designImages', image);
+            });
+
+            // Show loading
+            submitBtn.classList.add('loading');
+            submitBtn.disabled = true;
+
+            try {
+                const token = localStorage.getItem('authToken');
+                const response = await fetch('http://localhost:3000/api/v1/estimates/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('✅ Inquiry submitted successfully! Check your inbox to chat with contractors.');
+                    closeInquiryModal();
+                    
+                    // Call success callback
+                    if (window.parent && window.parent !== window && typeof window.parent.onInquirySuccess === 'function') {
+                        window.parent.onInquirySuccess();
+                    } else if (typeof window.onInquirySuccess === 'function') {
+                        window.onInquirySuccess();
+                    }
+                    
+                    // Redirect to inbox
+                    setTimeout(() => {
+                        window.top.location.href = 'inbox.html';
+                    }, 1500);
+                } else {
+                    alert('❌ ' + (data.message || 'Failed to submit inquiry'));
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('❌ An error occurred. Please try again.');
+            } finally {
+                submitBtn.classList.remove('loading');
+                submitBtn.disabled = false;
+            }
+        });
+
+        // Export function to be called from home.html
+        window.openInquiryModal = openInquiryModal;
+    </script>
+</body>
+</html>

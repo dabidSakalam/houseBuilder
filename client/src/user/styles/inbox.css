@@ -1,0 +1,377 @@
+/* =========================================================
+   GLOBAL STYLES — Matching HouseBuilder Theme
+========================================================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Roboto", sans-serif;
+}
+
+body {
+  background: #f4f6fb;
+  color: #333;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+/* =========================================================
+   PAGE TITLE + BACK LINK
+========================================================= */
+h1 {
+  text-align: center;
+  margin: 25px 0 10px;
+  font-size: 26px;
+  color: #3455b1;
+  font-weight: 700;
+}
+
+.back-btn {
+  display: inline-block;
+  margin: 20px;
+  padding: 10px 18px;
+  background: #1e88e5;
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 6px;
+  transition: 0.2s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+}
+
+.back-btn:hover {
+  background: #1565c0;
+  transform: translateY(-2px);
+}
+
+/* =========================================================
+   TABLE WRAPPER
+========================================================= */
+#inquiryTable {
+  width: 90%;
+  margin: 20px auto;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+}
+
+#inquiryTable th {
+  background: #3455b1;
+  color: #fff;
+  padding: 14px;
+  text-align: left;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+#inquiryTable td {
+  padding: 14px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+#inquiryTable tr:hover {
+  background: #f4f7ff;
+}
+
+/* View button */
+.reply-btn {
+  background: #3455b1;
+  color: #fff;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: 0.3s;
+}
+
+.reply-btn:hover {
+  background: #223a77;
+}
+
+/* =========================================================
+   MODAL
+========================================================= */
+#chatModal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  height: 80vh;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.close-btn {
+  position: absolute;
+  right: 15px;
+  top: 15px;
+  font-size: 28px;
+  cursor: pointer;
+  color: #7f8c8d;
+  z-index: 10;
+}
+
+.close-btn:hover {
+  color: #2c3e50;
+}
+
+/* =========================================================
+   CHAT CONTAINER
+========================================================= */
+#chatContainer {
+  flex: 1;
+  overflow-y: auto;
+  padding: 60px 20px 20px 20px;
+  background: #ecf0f1;
+}
+
+.message {
+  margin-bottom: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  max-width: 80%;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.user {
+  background: #3498db;
+  color: white;
+  margin-left: auto;
+}
+
+.message.admin {
+  background: white;
+  color: #2c3e50;
+}
+
+.message strong {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 0.9em;
+}
+
+.msg-date {
+  font-size: 0.75em;
+  opacity: 0.7;
+  margin-left: 8px;
+}
+
+.message p {
+  margin: 8px 0;
+  word-wrap: break-word;
+}
+
+.chat-image {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.chat-image:hover {
+  transform: scale(1.02);
+  opacity: 0.9;
+}
+
+/* =========================================================
+   CHAT INPUT AREA
+========================================================= */
+.input-area {
+  padding: 15px;
+  background: white;
+  border-top: 1px solid #ddd;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+#msgInput {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+#msgInput:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.file-input-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.file-input-wrapper input[type=file] {
+  position: absolute;
+  left: -9999px;
+}
+
+.file-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  background: #95a5a6;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.file-label:hover {
+  background: #7f8c8d;
+}
+
+.file-label.has-file {
+  background: #27ae60;
+}
+
+.send-btn {
+  padding: 12px 24px;
+  background: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+.send-btn:hover {
+  background: #2980b9;
+}
+
+.send-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+.image-preview {
+  position: absolute;
+  bottom: 70px;
+  left: 15px;
+  max-width: 150px;
+  max-height: 150px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background: white;
+  padding: 5px;
+}
+
+.image-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+.remove-preview {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 24px;
+  height: 24px;
+  background: #e74c3c;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/* =========================================================
+   LIGHTBOX FOR FULLSCREEN IMAGE
+========================================================= */
+.lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.9);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  cursor: zoom-out;
+}
+
+.lightbox.active {
+  display: flex;
+}
+
+.lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
+  z-index: 10000;
+  transition: transform 0.2s;
+}
+
+.lightbox-close:hover {
+  transform: scale(1.2);
+}
+
+/* =========================================================
+   LOADING STATE
+========================================================= */
+.loading {
+  text-align: center;
+  padding: 20px;
+  color: #7f8c8d;
+}

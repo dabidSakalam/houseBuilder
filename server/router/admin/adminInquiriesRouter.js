@@ -3,7 +3,9 @@ const adminInquiriesRouter = express.Router();
 const {
   getAllInquiries,
   getInquiryById,
-  sendToContractor
+  sendToContractor,
+  acceptInquiry,
+  completeInquiry  // ✅ ADD THIS
 } = require('../../controller/admin/adminInquiriesController');
 
 // ===== ROUTES =====
@@ -16,5 +18,11 @@ adminInquiriesRouter.get('/:id', getInquiryById);
 
 // Send inquiry to contractor
 adminInquiriesRouter.post('/sendToContractor', sendToContractor);
+
+// Accept inquiry
+adminInquiriesRouter.put('/:inquiryId/accept', acceptInquiry);
+
+// ✅ Complete inquiry (ADD THIS LINE)
+adminInquiriesRouter.put('/:inquiryId/complete', completeInquiry);
 
 module.exports = adminInquiriesRouter;
