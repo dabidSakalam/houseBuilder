@@ -7,21 +7,54 @@
   <link rel="stylesheet" href="./styles/adminLogin.css">
 </head>
 <body>
-  <div class="login-container">
-    <h1>Admin Login</h1>
-    <form id="loginForm">
-      <label for="email">Email</label>
-      <input type="email" id="email" placeholder="admin@housebuilder.com" required>
+  <!-- HEADER -->
+  <header class="login-header">
+    <div class="login-logo">HB</div>
+    <div class="login-title">
+      <span class="login-title-main">HouseBuilder</span>
+      <span class="login-title-sub">Admin Portal</span>
+    </div>
+  </header>
 
-      <label for="password">Password</label>
-      <input type="password" id="password" placeholder="Enter password" required>
+  <!-- MAIN (centers the card) -->
+  <main class="login-main">
+    <div class="login-container">
+      <h1>Admin Login</h1>
 
-      <button type="submit" class="btn-primary">Login</button>
-      <a class="backToLogin" href="../user/login.html">Go back</a>
-      <p id="loginMessage"></p>
-    </form>
-  </div>
+      <form id="loginForm">
+        <label for="email">Email</label>
+        <input
+          type="email"
+          id="email"
+          placeholder="admin@housebuilder.com"
+          required
+        >
 
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          placeholder="Enter password"
+          required
+        >
+
+        <button type="submit" class="btn-primary">Log in</button>
+
+        <a class="backToLogin" href="../user/login.html">
+          Back to User Log in
+        </a>
+
+        <p id="loginMessage"></p>
+      </form>
+    </div>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="login-footer">
+    © 2025 HouseBuilder. All rights reserved.
+  </footer>
+
+  <!-- Your existing JS (includes hover GIF logic) -->
   <script type="module" src="./scripts/adminLogin.js"></script>
 </body>
 </html>

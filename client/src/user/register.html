@@ -1,61 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Register - HouseBuilder</title>
-  <link rel="stylesheet" href="./styles/registerStyle.css">
+
+  <link rel="stylesheet" href="./styles/registerStyle.css" />
+
+  <!-- reCAPTCHA v2 script -->
+  <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
-
-  <!-- Header -->
-  <header class="navbar">
-    <div class="logo">🏠 
-      <strong><a href="index.html">HouseBuilder</a></strong>
-
-      <a class="adminLogin" href="../admin/adminLogin.html">👤</a>
+  <!-- HEADER (same style as user login / forgot password) -->
+  <header class="login-header">
+    <div class="login-logo">HB</div>
+    <div class="login-title">
+      <span class="login-title-main">HouseBuilder</span>
+      <span class="login-title-sub">User Portal</span>
     </div>
   </header>
 
-  <!-- Main Register Form -->
-  <main class="register-container-wrapper">
+  <!-- MAIN (centered glass card) -->
+  <main class="login-main">
     <div class="register-container">
       <h1>Create Your Account</h1>
+
       <form id="registerForm">
         <div class="form-group">
-          <label for="name">Name:</label>
-          <input type="text" id="name" placeholder="Enter your name" required>
+          <label for="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            placeholder="Enter your name"
+            required
+          />
         </div>
 
         <div class="form-group">
-          <label for="email">Email:</label>
-          <input type="email" id="email" placeholder="Enter your email" required>
+          <label for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required
+          />
         </div>
 
         <div class="form-group">
-          <label for="password">Password:</label>
-          <input type="password" id="password" placeholder="Enter your password" required>
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            placeholder="Enter your password"
+            required
+          />
         </div>
 
         <div class="form-group">
-          <label for="confirmPassword">Confirm Password:</label>
-          <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            placeholder="Confirm your password"
+            required
+          />
         </div>
 
+        <!-- ✅ reCAPTCHA v2 checkbox -->
+        <div
+          class="g-recaptcha"
+          data-sitekey="6LfhGiAsAAAAAJwgGRYk_MJIsgocfXiGWwy1OlXj">
+        </div>
+
+        <!-- Main register button -->
         <button type="submit" class="btn-register">Register</button>
+
+        <p class="login-link">
+          Already have an account?
+          <a href="./login.html">Login here</a>
+        </p>
+
+        <div id="messageBox" class="message-box"></div>
       </form>
-
-      <p class="login-link">
-        Already have an account? <a href="./login.html">Login here</a>
-      </p>
-
-      <div id="messageBox" class="message-box"></div>
     </div>
   </main>
 
-  <!-- Footer -->
-  <footer class="footer">
-    <p>© 2025 HouseBuilder. All rights reserved.</p>
+  <!-- FOOTER (same style as login/forgot) -->
+  <footer class="login-footer">
+    © 2025 HouseBuilder. All rights reserved.
   </footer>
 
   <script src="./scripts/registerScript.js"></script>

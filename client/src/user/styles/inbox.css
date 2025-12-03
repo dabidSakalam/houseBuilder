@@ -9,41 +9,237 @@
 }
 
 body {
-  background: #f4f6fb;
+  background: #f7f8fa;
   color: #333;
   min-height: 100vh;
-  padding-bottom: 40px;
+  padding-bottom: 0;          /* <- you can remove the old padding-bottom */
+  display: flex;              /* NEW */
+  flex-direction: column;     /* NEW */
+}
+
+
+/* =========================================================
+   NAVBAR (same style family as profile page)
+========================================================= */
+
+.navbar {
+  background: linear-gradient(to right, #3654a8, #37c4c4);
+  padding: 0.9rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Left side: back button + brand */
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+/* Back button */
+.back-button {
+  width: 38px;
+  height: 38px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(15, 23, 42, 0.18);
+  color: #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 3px 8px rgba(15, 23, 42, 0.45);
+  transition:
+    background 0.15s ease,
+    transform 0.1s ease,
+    box-shadow 0.15s ease;
+  font-size: 1rem;
+}
+
+.back-button i {
+  pointer-events: none;
+}
+
+.back-button:hover {
+  background: rgba(15, 23, 42, 0.3);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 12px rgba(15, 23, 42, 0.6);
+}
+
+/* Brand (HB logo + text) */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: #ffffff;
+}
+
+.brand-logo-box {
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  background: #3455b1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+}
+
+.brand-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.brand-tagline {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+/* Center page title */
+.nav-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.nav-page-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #e5e7eb;
+}
+
+/* Right side: user icon + dropdown */
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+/* user menu wrapper */
+.user-menu {
+  position: relative;
+  display: inline-block;
+}
+
+/* avatar button */
+.user-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  border: none;
+  background: #e5ebff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.3rem;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.35);
+  transition:
+    transform 0.1s ease,
+    box-shadow 0.1s ease,
+    background 0.15s ease;
+}
+
+.user-icon:hover {
+  transform: translateY(-1px);
+  background: #ffffff;
+  box-shadow: 0 6px 14px rgba(15, 23, 42, 0.5);
+}
+
+/* dropdown panel */
+.user-dropdown {
+  position: absolute;
+  top: 52px;
+  right: 0;
+  min-width: 180px;
+  padding: 8px 0;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.25);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  z-index: 100;
+}
+
+/* show class toggled by JS */
+.user-dropdown.show {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+/* dropdown items */
+.user-dropdown .dropdown-item,
+.user-dropdown a {
+  width: 100%;
+  padding: 9px 16px;
+  border: none;
+  background: transparent;
+  text-align: left;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: #111827;
+  text-decoration: none;
+  display: block;
+  transition: background 0.12s ease, color 0.12s ease;
+}
+
+.user-dropdown .dropdown-item:hover,
+.user-dropdown a:hover {
+  background: rgba(55, 65, 81, 0.06);
+}
+
+/* logout item special color */
+.dropdown-logout {
+  color: #b91c1c;
+}
+
+.dropdown-logout:hover {
+  background: rgba(248, 113, 113, 0.18);
+}
+
+/* small tweak for mobile */
+@media (max-width: 768px) {
+  .navbar {
+    flex-wrap: wrap;
+    gap: 0.6rem;
+  }
+
+  .nav-center {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    margin-top: 0.25rem;
+  }
 }
 
 /* =========================================================
-   PAGE TITLE + BACK LINK
+   MAIN LAYOUT
 ========================================================= */
-h1 {
-  text-align: center;
-  margin: 25px 0 10px;
-  font-size: 26px;
-  color: #3455b1;
-  font-weight: 700;
+
+.inbox-main {
+  padding-top: 20px;
+  flex: 1;                    /* NEW – this pushes the footer down */
 }
 
-.back-btn {
-  display: inline-block;
-  margin: 20px;
-  padding: 10px 18px;
-  background: #1e88e5;
-  color: white;
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: bold;
-  border-radius: 6px;
-  transition: 0.2s;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
-}
-
-.back-btn:hover {
-  background: #1565c0;
-  transform: translateY(-2px);
-}
 
 /* =========================================================
    TABLE WRAPPER
@@ -55,7 +251,7 @@ h1 {
   background: #fff;
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 3px 12px rgba(0,0,0,0.15);
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
 }
 
 #inquiryTable th {
@@ -105,7 +301,7 @@ h1 {
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
 }
 
 .modal-content {
@@ -238,7 +434,7 @@ h1 {
   overflow: hidden;
 }
 
-.file-input-wrapper input[type=file] {
+.file-input-wrapper input[type="file"] {
   position: absolute;
   left: -9999px;
 }
@@ -266,7 +462,7 @@ h1 {
 
 .send-btn {
   padding: 12px 24px;
-  background: #3498db;
+  background: #2f50a5;
   color: white;
   border: none;
   border-radius: 6px;
@@ -374,4 +570,248 @@ h1 {
   text-align: center;
   padding: 20px;
   color: #7f8c8d;
+}
+
+
+
+/* =========================================================
+   FLOATING DARK MODE TOGGLE
+========================================================= */
+
+.theme-toggle {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 999px;
+  border: none;
+  background: #020617;
+  color: #f9fafb;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.7);
+  z-index: 9999;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background 0.15s ease;
+}
+
+.theme-toggle-icon {
+  font-size: 1.4rem;
+}
+
+.theme-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 55px rgba(15, 23, 42, 0.9);
+}
+
+/* =========================================================
+   DARK MODE
+========================================================= */
+
+body.dark-mode {
+  background: #020617;
+  color: #e5e7eb;
+}
+
+/* Navbar dark */
+body.dark-mode .navbar {
+  background: linear-gradient(to right, #020617, #020617);
+  border-bottom-color: #020617;
+}
+
+body.dark-mode .nav-page-title {
+  color: #e5e7eb;
+}
+
+/* Table dark */
+body.dark-mode #inquiryTable {
+  background: #020617;
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
+}
+
+body.dark-mode #inquiryTable th {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+body.dark-mode #inquiryTable td {
+  border-bottom-color: #1f2937;
+  color: #e5e7eb;
+}
+
+body.dark-mode #inquiryTable tr:hover {
+  background: #020617;
+}
+
+/* Buttons in dark mode */
+body.dark-mode .reply-btn {
+  background: #4f46e5;
+}
+
+body.dark-mode .reply-btn:hover {
+  background: #4338ca;
+}
+
+/* Modal dark */
+body.dark-mode .modal-content {
+  background: #020617;
+  color: #e5e7eb;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.9);
+}
+
+body.dark-mode .close-btn {
+  color: #9ca3af;
+}
+
+body.dark-mode .close-btn:hover {
+  color: #e5e7eb;
+}
+
+/* Chat area dark */
+body.dark-mode #chatContainer {
+  background: #020617;
+}
+
+body.dark-mode .message.admin {
+  background: #111827;
+  color: #e5e7eb;
+}
+
+body.dark-mode .message.user {
+  background: #223a77;
+}
+
+/* Input area dark */
+body.dark-mode .input-area {
+  background: #020617;
+  border-top-color: #1f2937;
+}
+
+body.dark-mode #msgInput {
+  background: #020617;
+  color: #e5e7eb;
+  border-color: #1f2937;
+}
+
+body.dark-mode #msgInput:focus {
+  border-color: #4f46e5;
+}
+
+body.dark-mode .file-label {
+  background: #374151;
+}
+
+body.dark-mode .file-label:hover {
+  background: #4b5563;
+}
+
+body.dark-mode .file-label.has-file {
+  background: #059669;
+}
+
+body.dark-mode .send-btn {
+  background: #223a77;
+}
+
+body.dark-mode .send-btn:hover {
+  background: #120f39;
+}
+
+/* Image preview dark */
+body.dark-mode .image-preview {
+  background: #020617;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.9);
+}
+
+/* Loading text dark */
+body.dark-mode .loading {
+  color: #9ca3af;
+}
+
+/* Lightbox unchanged mostly; keep it dark but fine */
+
+/* Invert theme toggle in dark mode */
+body.dark-mode .theme-toggle {
+  background: #f9fafb;
+  color: #020617;
+}
+
+/* ===== FOOTER (same as profile) ===== */
+
+.profile-footer {
+  border-top: 1px solid #e5e7eb;
+  padding: 1.5rem 1rem 1.8rem;
+  background: #f7f8fa;
+}
+
+.profile-footer {
+  /* existing styles... */
+  margin-top: auto;           /* ensures it stays at the bottom */
+}
+
+
+.footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.footer-socials {
+  display: flex;
+  gap: 10px;
+}
+
+.footer-socials a {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: #4b5563;
+  background: #e5e7eb;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    color 0.2s ease;
+}
+
+.footer-socials a:hover {
+  background: #2563eb;
+  color: #ffffff;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .footer-inner {
+    flex-direction: column;
+  }
+}
+
+/* Dark mode footer – make it match the rest of the page */
+body.dark-mode .profile-footer {
+  background: #020617;
+  border-top-color: #1f2937;
+}
+
+body.dark-mode .footer-inner {
+  color: #9ca3af;
+}
+
+body.dark-mode .footer-socials a {
+  background: #111827;
+  color: #e5e7eb;
 }

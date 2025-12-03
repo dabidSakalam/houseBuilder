@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,23 +8,30 @@
   <link rel="stylesheet" href="./styles/features.css">
   <script src="./scripts/checkAdminLogin.js"></script>
 </head>
+
 <body>
   <header class="admin-header">
     <h1>Features</h1>
-    <nav>
-      <a href="dashboard.html">Statistics</a>
-      <a href="models.html">Models</a>
-      <a href="cityRates.html">City</a>
-      <a href="features.html">Features</a>
-      <a href="Inquiries.html">Inquiries</a>
-      <a href="adminLogin.html" id="logoutBtn" class="btn-logout">Logout</a>
-    </nav>
+
+    <!-- Search beside title (like inquiries) -->
+    <section class="feature-header-controls">
+      <input type="text" id="searchFeature" placeholder="Search feature...">
+    </section>
+
+ <nav>
+    <a href="dashboard.html">Statistics</a>
+    <a href="models.html">Models</a>
+    <a href="cityRates.html">City</a>
+    <a href="features.html" class="active">Features</a>
+    <a href="inquiries.html">Inquiries</a>
+    <button id="logoutBtn" class="btn-logout" type="button">Logout</button>
+  </nav>
   </header>
 
   <main class="admin-main">
+    <!-- Controls under header (just the Add button now) -->
     <section class="feature-controls">
-      <button id="addFeatureBtn">Add Feature</button>
-      <input type="text" id="searchFeature" placeholder="Search feature...">
+      <button id="addFeatureBtn">+ Add Feature</button>
     </section>
 
     <section class="feature-table-section">
@@ -54,6 +62,42 @@
     </div>
   </div>
 
+  <!-- 🌙 Floating dark mode toggle -->
+  <button
+    id="theme-toggle"
+    class="theme-toggle-fab"
+    aria-label="Toggle dark mode"
+    type="button"
+  >
+    🌙
+  </button>
+
   <script type="module" src="./scripts/features.js"></script>
+
+  <!-- 🌙 Theme toggle logic (same as inquiries) -->
+  <script>
+    const root = document.documentElement;
+    const themeToggleBtn = document.getElementById('theme-toggle');
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        root.classList.add('dark');
+        themeToggleBtn.textContent = '☀️';
+      } else {
+        root.classList.remove('dark');
+        themeToggleBtn.textContent = '🌙';
+      }
+    }
+
+    const savedTheme = localStorage.getItem('admin-theme');
+    applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+
+    themeToggleBtn.addEventListener('click', () => {
+      const newTheme = root.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('admin-theme', newTheme);
+    });
+  </script>
 </body>
+
 </html>

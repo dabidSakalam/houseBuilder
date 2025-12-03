@@ -1,18 +1,68 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>My Profile - HouseBuilder</title>
+
+  <!-- Font Awesome for footer socials + back icon -->
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
   <link rel="stylesheet" href="./styles/profile.css" />
 </head>
-
 <body>
+  <!-- NAVBAR -->
   <header class="navbar">
-    <div class="logo">🏠 <strong><a href="./home.html">HouseBuilder</a></strong></div>
-    <nav>
-      <a href="./home.html" class="back-btn">← Back to Home</a>
+    <!-- Left: back button + HB brand -->
+    <div class="nav-left">
+      <button
+        class="back-button"
+        type="button"
+        aria-label="Back to Home"
+        onclick="window.location.href='home.html'"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <a href="./home.html" class="brand">
+        <div class="brand-logo-box">HB</div>
+        <div class="brand-text">
+          <span class="brand-title">HouseBuilder</span>
+          <span class="brand-tagline">Your Partner in Residential Construction</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- Center page title -->
+    <div class="nav-center">
+      <h1 class="nav-page-title">My Profile</h1>
+    </div>
+
+    <!-- Right: user menu -->
+    <nav class="nav-right">
+      <div class="user-menu" id="userMenu">
+        <button class="user-icon" id="userIcon" aria-label="Open account menu">
+          👤
+        </button>
+
+        <div class="user-dropdown" id="userDropdown">
+          <button
+            class="dropdown-item"
+            onclick="window.location.href='inbox.html'"
+          >
+            Inbox
+          </button>
+          <button class="dropdown-item dropdown-logout" id="logoutBtn">
+            Logout
+          </button>
+        </div>
+      </div>
     </nav>
   </header>
 
@@ -26,15 +76,24 @@
 
       <div class="info-card">
         <div class="info-row">
-          <span class="info-label">📧 Email:</span>
+          <span class="info-label">
+            <i class="fa-solid fa-envelope"></i>
+            Email:
+          </span>
           <span class="info-value" id="userEmail">Loading...</span>
         </div>
         <div class="info-row">
-          <span class="info-label">👤 Name:</span>
+          <span class="info-label">
+            <i class="fa-solid fa-user"></i>
+            Name:
+          </span>
           <span class="info-value" id="userName">Loading...</span>
         </div>
         <div class="info-row">
-          <span class="info-label">📅 Member Since:</span>
+          <span class="info-label">
+            <i class="fa-solid fa-calendar-days"></i>
+            Member Since:
+          </span>
           <span class="info-value" id="memberSince">Loading...</span>
         </div>
       </div>
@@ -42,22 +101,64 @@
 
     <!-- Inquiry History Section -->
     <section class="inquiry-history">
-      <h2>📋 My Inquiry History</h2>
+      <div class="history-header">
+        <h2>
+          <i class="fa-regular fa-clipboard"></i>
+          My Inquiry History
+        </h2>
+      </div>
       <div class="history-container" id="historyContainer">
         <div class="loading">Loading your inquiries...</div>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <p>&copy; 2025 HouseBuilder. All rights reserved.</p>
+  <!-- FOOTER -->
+  <footer class="profile-footer">
+    <div class="footer-inner">
+      <p>© 2025 HouseBuilder. All rights reserved.</p>
+      <div class="footer-socials">
+        <a
+          href="https://facebook.com/khiaramarie.delmundo.18"
+          target="_blank"
+          aria-label="HouseBuilder on Facebook"
+        >
+          <i class="fab fa-facebook-f"></i>
+        </a>
+        <a
+          href="https://instagram.com/_rentfl"
+          target="_blank"
+          aria-label="HouseBuilder on Instagram"
+        >
+          <i class="fab fa-instagram"></i>
+        </a>
+        <a
+          href="https://x.com/yourpage"
+          target="_blank"
+          aria-label="HouseBuilder on X (Twitter)"
+        >
+          <i class="fab fa-x-twitter"></i>
+        </a>
+      </div>
+    </div>
   </footer>
 
-  <iframe id="detailsModalFrame" src="../admin/inquiriesDetailsModal.html"
-    style="display:none; border:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999;">
-  </iframe>
+  <!-- Iframe for Inquiry Details Modal -->
+  <iframe
+    id="detailsModalFrame"
+    src="../admin/inquiriesDetailsModal.html"
+    style="display:none; border:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999;"
+  ></iframe>
 
-  <script type="module" src="./scripts/profile.js"></script>
+  <!-- Floating Dark-Mode Toggle -->
+  <button
+    class="theme-toggle"
+    id="themeToggleBtn"
+    aria-label="Toggle dark mode"
+  >
+    <span class="theme-toggle-icon" id="themeToggleIcon">🌙</span>
+  </button>
+
+  <script src="./scripts/profile.js"></script>
 </body>
-
 </html>

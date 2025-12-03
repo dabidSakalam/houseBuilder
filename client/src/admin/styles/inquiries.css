@@ -1,4 +1,52 @@
-/* ===== GENERAL RESET ===== */
+/* =========================================================================
+   THEME VARIABLES
+   ========================================================================= */
+:root {
+  --bg-color: #f5f7fa;
+  --text-color: #111827;
+
+  --header-gradient: linear-gradient(to right, #243a77, #64651b);
+
+  --card-bg: #ffffff;
+  --border-color: #ecf0f1;
+  --table-header-bg: linear-gradient(to right, #243a77, #64651b);
+  --table-row-hover-bg: #f8f9fa;
+
+  --chat-bg: #ecf0f1;
+  --modal-bg: #ffffff;
+
+  --button-bg: #243a77;
+  --button-hover-bg: #17264e;
+
+  --logout-bg: #243a77;
+  --logout-hover-bg: #c0392b;
+}
+
+/* Dark mode overrides */
+:root.dark {
+  --bg-color: #050816;
+  --text-color: #e5e7eb;
+
+  --header-gradient: linear-gradient(to right, #020617, #111827);
+
+  --card-bg: #020617;
+  --border-color: #1f2933;
+  --table-header-bg: linear-gradient(to right, #020617, #111827);
+  --table-row-hover-bg: #0b1220;
+
+  --chat-bg: #020617;
+  --modal-bg: #020617;
+
+  --button-bg: #2563eb;
+  --button-hover-bg: #1d4ed8;
+
+  --logout-bg: #1f2937;
+  --logout-hover-bg: #b91c1c;
+}
+
+/* =========================================================================
+   RESET / BASE
+   ========================================================================= */
 * {
   margin: 0;
   padding: 0;
@@ -7,16 +55,48 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  background: #f5f7fa;
+  background: var(--bg-color);
+  color: var(--text-color);
 }
 
-/* ===== HEADER ===== */
+/* =========================================================================
+   HEADER
+   ========================================================================= */
 .admin-header {
-  background: #2c3e50;
+  background: var(--header-gradient);
   color: white;
   padding: 20px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
+}
+
+/* Title */
+.admin-header h1 {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Search area between title and nav */
+.inquiry-controls {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* Search input */
+#searchInquiry {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Nav links */
+.admin-header nav {
+  display: flex;
   align-items: center;
 }
 
@@ -26,46 +106,129 @@ body {
   margin-left: 20px;
   padding: 8px 16px;
   border-radius: 4px;
-  transition: background 0.3s;
 }
 
-.admin-header nav a:hover {
+/* Active page pill */
+.admin-header nav a.active {
+  background: #ffffff;
+  color: #243a77;
+  font-weight: 600;
+  border-radius: 5px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+}
+
+/* Only non-logout links get subtle hover */
+.admin-header nav a:not(.btn-logout):hover {
   background: rgba(255, 255, 255, 0.1);
 }
 
+/* Logout button */
 .btn-logout {
-  background: #e74c3c !important;
+  margin-left: 1rem;
+  padding: 10px 18px;
+  background: var(--logout-bg);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  display: inline-block;
+  font-weight: 500;
 }
 
-/* ===== MAIN CONTENT ===== */
+.btn-logout:hover {
+  background: var(--logout-hover-bg);
+}
+
+/* =========================================================================
+   THEME TOGGLE FAB
+   ========================================================================= */
+.theme-toggle-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--button-bg);
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 1100;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.theme-toggle-fab:hover {
+  background: var(--button-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================================================================
+   FILTER BAR (status + sort)
+   ========================================================================= */
 .admin-main {
   padding: 20px;
 }
 
-.inquiry-controls {
-  margin-bottom: 20px;
+.inquiry-filters-bar {
+  margin: 10px 0 20px;
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
 }
 
-#searchInquiry {
-  width: 100%;
-  max-width: 400px;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   font-size: 14px;
 }
 
-/* ===== TABLE ===== */
+.filter-group label {
+  color: var(--text-color);
+  font-weight: 500;
+}
+
+.filter-group select {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 13px;
+  background: #ffffff;
+  color: var(--text-color);
+}
+
+:root.dark .filter-group select {
+  background: #020617;
+  border-color: #374151;
+  color: #e5e7eb;
+}
+
+/* =========================================================================
+   INQUIRY TABLE
+   ========================================================================= */
+.inquiry-table-section {
+  overflow-x: auto;
+}
+
 .inquiry-table {
   width: 100%;
-  background: white;
+  background: var(--card-bg);
   border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  border-collapse: collapse;
 }
 
 .inquiry-table thead {
-  background: #34495e;
+  background: var(--table-header-bg);
   color: white;
 }
 
@@ -73,13 +236,26 @@ body {
 .inquiry-table td {
   padding: 12px;
   text-align: left;
-  border-bottom: 1px solid #ecf0f1;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Make rows feel clickable */
+.inquiry-table tbody tr {
+  background: var(--card-bg);
+  cursor: pointer;
+}
+
+/* Center Actions column */
+.inquiry-table tbody td:last-child {
+  text-align: center;
+  vertical-align: middle;
 }
 
 .inquiry-table tbody tr:hover {
-  background: #f8f9fa;
+  background: var(--table-row-hover-bg);
 }
 
+/* Row states */
 .inquiry-table tr.cancelled {
   opacity: 0.6;
   background: #f8f9fa;
@@ -89,7 +265,28 @@ body {
   background: #f0f9f4;
 }
 
-/* ===== STATUS BADGES ===== */
+/* Dark mode row overrides */
+:root.dark .inquiry-table tr.cancelled {
+  opacity: 1;
+  background: #3f1d26;
+}
+
+:root.dark .inquiry-table tr.accepted {
+  background: #022c22;
+}
+
+:root.dark .inquiry-table tr.pending {
+  background: #31270a;
+}
+
+/* Buttons in rows keep pointer */
+.inquiry-table tbody tr button {
+  cursor: pointer;
+}
+
+/* =========================================================================
+   STATUS BADGES
+   ========================================================================= */
 .status-badge {
   padding: 4px 10px;
   border-radius: 12px;
@@ -108,34 +305,63 @@ body {
   color: #155724;
 }
 
-.status-badge.cancelled {
+.status-badge.cancelled,
+.status-badge.rejected {
   background: #f8d7da;
   color: #721c24;
 }
 
-/* ===== BUTTONS ===== */
-.reply-btn {
-  background: #3498db;
-  color: white;
-  border: none;
-  padding: 8px 16px;
+/* Dark mode */
+:root.dark .status-badge.pending {
+  background: #78350f;
+  color: #fde68a;
+}
+
+:root.dark .status-badge.accepted {
+  background: #14532d;
+  color: #bbf7d0;
+}
+
+:root.dark .status-badge.cancelled,
+:root.dark .status-badge.rejected {
+  background: #7f1d1d;
+  color: #fecaca;
+}
+
+/* =========================================================================
+   ACTION BUTTONS (Accept / Reply / Complete)
+   ========================================================================= */
+.action-buttons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.action-buttons button {
+  padding: 8px 14px;
+  font-size: 12px;
   border-radius: 5px;
+  border: none;
   cursor: pointer;
+  white-space: nowrap;
+}
+
+/* Reply */
+.reply-btn {
+  background: #3251a5;
+  color: white;
   transition: background 0.3s;
 }
 
 .reply-btn:hover {
-  background: #2980b9;
+  background: #243a77;
 }
 
+/* Accept */
 .accept-btn {
   background: #27ae60;
   color: #fff;
-  padding: 6px 12px;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 5px;
   font-weight: 500;
   transition: background 0.3s;
 }
@@ -149,7 +375,25 @@ body {
   cursor: not-allowed;
 }
 
-/* ===== MODAL ===== */
+/* Complete */
+.complete-btn {
+  background: #868825;
+  color: #fff;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+/* Optional legacy class */
+.view-details-btn {
+  background: #767676;
+  color: #fff;
+  font-weight: 500;
+  transition: background 0.3s;
+}
+
+/* =========================================================================
+   CHAT MODAL
+   ========================================================================= */
 .modal {
   display: none;
   position: fixed;
@@ -161,12 +405,14 @@ body {
   z-index: 1000;
 }
 
+/* Modal shell */
 .modal-content {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: white;
+  background: var(--modal-bg);
+  color: var(--text-color);
   width: 90%;
   max-width: 600px;
   height: 80vh;
@@ -176,32 +422,76 @@ body {
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
-.modal-content h2 {
-  padding: 20px;
-  border-bottom: 1px solid #ecf0f1;
-  color: #2c3e50;
+/* ----- Chat modal header ----- */
+.chat-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px 10px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.4);
+  background: linear-gradient(
+    to right,
+    rgba(36, 58, 119, 0.08),
+    rgba(100, 101, 27, 0.08)
+  );
 }
 
-.close-btn {
-  position: absolute;
-  right: 15px;
-  top: 15px;
-  font-size: 28px;
+.chat-header-text {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Title: "Messages · Name" */
+#chatTitle {
+  margin: 0;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* Subtitle: "Inquiry #.. • City .." */
+.chat-meta {
+  margin: 4px 0 0;
+  font-size: 0.82rem;
+  color: #6b7280;
+}
+
+:root.dark #chatTitle {
+  color: #e5e7eb;
+}
+
+:root.dark .chat-meta {
+  color: #9ca3af;
+}
+
+/* Close btn INSIDE the header */
+.chat-header .close-btn {
+  position: static;           /* overrides any generic styles */
+  background: transparent;
+  border: none;
+  font-size: 1.4rem;
+  line-height: 1;
+  color: #6b7280;
+  height: 25px;
+  width: 25px;
+  border-radius: 80%;
   cursor: pointer;
-  color: #7f8c8d;
-  z-index: 10;
+  transition: all 0.3s;
 }
 
 .close-btn:hover {
-  color: #2c3e50;
+  color: white;
+  background: rgba(177, 19, 19, 0.718);
 }
 
-/* ===== CHAT CONTAINER ===== */
+/* (No generic .close-btn rule here on purpose, so it doesn't interfere) */
+
+/* ----- Chat body ----- */
 .chat-container {
   flex: 1;
   overflow-y: auto;
   padding: 20px;
-  background: #ecf0f1;
+  background: var(--chat-bg);
 }
 
 .message {
@@ -217,7 +507,6 @@ body {
     opacity: 0;
     transform: translateY(10px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -225,14 +514,14 @@ body {
 }
 
 .message.admin {
-  background: #3498db;
+  background: #243a77;
   color: white;
   margin-left: auto;
 }
 
 .message.user {
-  background: white;
-  color: #2c3e50;
+  background: var(--card-bg);
+  color: var(--text-color);
 }
 
 .message strong {
@@ -266,11 +555,11 @@ body {
   opacity: 0.9;
 }
 
-/* ===== CHAT INPUT ===== */
+/* ----- Chat input row ----- */
 .chat-input {
   padding: 15px;
-  background: white;
-  border-top: 1px solid #ddd;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border-color);
   display: flex;
   gap: 10px;
   align-items: center;
@@ -305,7 +594,7 @@ body {
   justify-content: center;
   width: 40px;
   height: 40px;
-  background: #95a5a6;
+  background: #6a7677;
   color: white;
   border-radius: 6px;
   cursor: pointer;
@@ -322,7 +611,7 @@ body {
 
 #sendMsgBtn {
   padding: 12px 24px;
-  background: #3498db;
+  background: #243a77;
   color: white;
   border: none;
   border-radius: 6px;
@@ -340,7 +629,7 @@ body {
   cursor: not-allowed;
 }
 
-/* ===== IMAGE PREVIEW ===== */
+/* ----- Image preview inside chat ----- */
 .image-preview {
   position: absolute;
   bottom: 70px;
@@ -349,7 +638,7 @@ body {
   max-height: 150px;
   border-radius: 8px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-  background: white;
+  background: var(--card-bg);
   padding: 5px;
 }
 
@@ -377,7 +666,7 @@ body {
   font-weight: bold;
 }
 
-/* ===== LIGHTBOX ===== */
+/* ----- Chat lightbox ----- */
 .lightbox {
   display: none;
   position: fixed;
@@ -425,66 +714,277 @@ body {
   color: #7f8c8d;
 }
 
-.status-badge.completed {
-  background: #d1fae5;
-  color: #065f46;
-  border: 1px solid #10b981;
+/* =========================================================================
+   INQUIRY DETAILS MODAL
+   ========================================================================= */
+.details-modal-overlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
 
-.complete-btn {
-  background: #10b981;
+.details-modal-overlay.active {
+  display: flex;
+}
+
+.details-modal {
+  background: var(--modal-bg);
+  color: var(--text-color);
+  width: 100%;
+  max-width: 900px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: 16px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+  animation: modalSlide 0.3s ease;
+}
+
+@keyframes modalSlide {
+  from {
+    transform: translateY(-50px) scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+
+.details-header {
+  background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
   color: white;
-  padding: 8px 16px;
+  padding: 25px 30px;
+  border-radius: 16px 16px 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.details-header h2 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 600;
+}
+
+.close-details {
+  background: rgba(255, 255, 255, 0.2);
   border: none;
-  border-radius: 6px;
+  color: white;
+  font-size: 24px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   cursor: pointer;
-  font-size: 14px;
   transition: all 0.3s;
 }
 
-.complete-btn:hover {
-  background: #059669;
+.close-details:hover {
+  background: rgba(177, 19, 19, 0.718);
+}
+
+.details-body {
+  padding: 30px;
+}
+
+.detail-section {
+  margin-bottom: 30px;
+  padding-bottom: 25px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+.detail-section:last-child {
+  border-bottom: none;
+}
+
+.section-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1e3c72;
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Client info card */
+.user-info-card {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding: 20px;
+  border-radius: 12px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #666;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+  font-weight: 600;
+}
+
+.info-value {
+  font-size: 16px;
+  color: #1e3c72;
+  font-weight: 500;
+}
+
+/* Property grid */
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 20px;
+}
+
+.property-item {
+  background: #f9fafb;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s;
+}
+
+.property-item:hover {
+  border-color: #1e3c72;
   transform: translateY(-2px);
 }
 
-.complete-btn:disabled {
-  background: #9ca3af;
-  cursor: not-allowed;
-}
-/* Completed status badge */
-.status-badge.completed {
-    background: #d1fae5;
-    color: #065f46;
-    border: 1px solid #10b981;
+.property-icon {
+  font-size: 32px;
+  margin-bottom: 10px;
 }
 
-/* Complete button styling */
-.complete-btn {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    box-shadow: 0 2px 4px rgba(16, 185, 129, 0.2);
+.property-value {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1e3c72;
 }
 
-.complete-btn:hover {
-    background: linear-gradient(135deg, #059669 0%, #047857 100%);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(16, 185, 129, 0.3);
+/* Features */
+.features-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
-.complete-btn:disabled {
-    background: #9ca3af;
-    cursor: not-allowed;
-    transform: none;
-    box-shadow: none;
+.feature-tag {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
 }
 
-.complete-btn:active {
-    transform: translateY(0);
+/* Client message */
+.message-box {
+  background: #fffbeb;
+  border-left: 4px solid #f59e0b;
+  padding: 20px;
+  border-radius: 8px;
+  line-height: 1.6;
+}
+
+.message-box.empty {
+  background: #f3f4f6;
+  border-left-color: #9ca3af;
+  font-style: italic;
+}
+
+/* Design images */
+.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.image-item {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+.image-item:hover {
+  transform: scale(1.05);
+}
+
+.image-item img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+.zoom-icon {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.no-images {
+  text-align: center;
+  padding: 40px;
+  color: #9ca3af;
+  font-style: italic;
+}
+
+/* Image lightbox for details */
+.image-lightbox {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.95);
+  z-index: 10001;
+  justify-content: center;
+  align-items: center;
+}
+
+.image-lightbox.active {
+  display: flex;
+}
+
+.image-lightbox img {
+  max-width: 90%;
+  max-height: 90%;
+  border-radius: 8px;
+}
+
+.lightbox-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: white;
+  color: black;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 28px;
+  cursor: pointer;
 }

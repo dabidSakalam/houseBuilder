@@ -1,15 +1,26 @@
+// ===== DOM ELEMENTS =====
 const tableBody = document.getElementById('inquiryTableBody');
+const searchInput = document.getElementById('searchInquiry');
+const statusFilter = document.getElementById('statusFilter');
+const sortFilter = document.getElementById('sortFilter');
+
 const API_URL = 'http://localhost:3000/api/v1/admin/adminInquiries';
 const token = localStorage.getItem('adminToken');
 
 const modal = document.getElementById('chatModal');
 const chatContainer = document.getElementById('chatContainer');
+const chatTitleEl = document.getElementById('chatTitle');
+const chatSubtitleEl = document.getElementById('chatSubtitle');
+
 let currentInquiryId = null;
 
-// ✅ SOCKET.IO CONNECTION
+// Store all inquiries for searching/filtering/sorting
+let allInquiries = [];
+
+// ===== SOCKET.IO CONNECTION =====
 const socket = io('http://localhost:3000');
 
-// ✅ SOCKET FUNCTIONS
+// Join / leave inquiry-specific rooms
 function joinInquiryRoom(inquiryId) {
   socket.emit('join-inquiry', inquiryId);
   console.log('Joined inquiry room:', inquiryId);
@@ -20,7 +31,7 @@ function leaveInquiryRoom(inquiryId) {
   console.log('Left inquiry room:', inquiryId);
 }
 
-// ✅ LISTEN FOR NEW MESSAGES
+// Listen for new messages for the current inquiry
 socket.on('new-message', (message) => {
   console.log('New message received:', message);
   if (message.inquiryId == currentInquiryId) {
@@ -28,7 +39,7 @@ socket.on('new-message', (message) => {
   }
 });
 
-// ✅ APPEND NEW MESSAGE
+// Append a single new chat message
 function appendNewMessage(message) {
   const div = document.createElement('div');
   div.classList.add('message', message.senderType === 'admin' ? 'admin' : 'user');
@@ -49,42 +60,34 @@ const previewImg = document.getElementById('previewImg');
 const removePreview = document.getElementById('removePreview');
 const fileLabel = document.getElementById('fileLabel');
 
-imgInput.addEventListener('change', (e) => {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      previewImg.src = event.target.result;
-      imagePreview.style.display = 'block';
-      fileLabel.classList.add('has-file');
-      fileLabel.textContent = '✓';
-    };
-    reader.readAsDataURL(file);
-  }
-});
+if (imgInput) {
+  imgInput.addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        previewImg.src = event.target.result;
+        imagePreview.style.display = 'block';
+        fileLabel.classList.add('has-file');
+        fileLabel.textContent = '✓';
+      };
+      reader.readAsDataURL(file);
+    }
+  });
+}
 
-removePreview.addEventListener('click', () => {
-  imgInput.value = '';
-  imagePreview.style.display = 'none';
-  fileLabel.classList.remove('has-file');
-  fileLabel.textContent = '🔎';
-});
+if (removePreview) {
+  removePreview.addEventListener('click', () => {
+    imgInput.value = '';
+    imagePreview.style.display = 'none';
+    fileLabel.classList.remove('has-file');
+    fileLabel.textContent = '📎';
+  });
+}
 
-// ===== CLOSE MODAL =====
-modal.querySelector('.close-btn').addEventListener('click', () => {
-  if (currentInquiryId) {
-    leaveInquiryRoom(currentInquiryId);
-    currentInquiryId = null;
-  }
-  imgInput.value = '';
-  imagePreview.style.display = 'none';
-  fileLabel.classList.remove('has-file');
-  fileLabel.textContent = '🔎';
-  modal.style.display = 'none';
-});
-
-window.addEventListener('click', e => { 
-  if (e.target === modal) {
+// ===== CLOSE CHAT MODAL =====
+if (modal) {
+  modal.querySelector('.close-btn').addEventListener('click', () => {
     if (currentInquiryId) {
       leaveInquiryRoom(currentInquiryId);
       currentInquiryId = null;
@@ -92,10 +95,30 @@ window.addEventListener('click', e => {
     imgInput.value = '';
     imagePreview.style.display = 'none';
     fileLabel.classList.remove('has-file');
-    fileLabel.textContent = '🔎';
+    fileLabel.textContent = '📎';
+    chatContainer.innerHTML = '';
+    if (chatTitleEl) chatTitleEl.textContent = 'Messages';
+    if (chatSubtitleEl) chatSubtitleEl.textContent = 'Select an inquiry and click Reply to start chatting.';
     modal.style.display = 'none';
-  }
-});
+  });
+
+  window.addEventListener('click', e => { 
+    if (e.target === modal) {
+      if (currentInquiryId) {
+        leaveInquiryRoom(currentInquiryId);
+        currentInquiryId = null;
+      }
+      imgInput.value = '';
+      imagePreview.style.display = 'none';
+      fileLabel.classList.remove('has-file');
+      fileLabel.textContent = '📎';
+      chatContainer.innerHTML = '';
+      if (chatTitleEl) chatTitleEl.textContent = 'Messages';
+      if (chatSubtitleEl) chatSubtitleEl.textContent = 'Select an inquiry and click Reply to start chatting.';
+      modal.style.display = 'none';
+    }
+  });
+}
 
 // ===== FETCH ALL INQUIRIES =====
 async function fetchInquiries() {
@@ -103,11 +126,92 @@ async function fetchInquiries() {
     const res = await fetch(API_URL, { headers: { Authorization: `Bearer ${token}` } });
     if (!res.ok) throw new Error('Failed to fetch inquiries');
     const data = await res.json();
-    renderTable(data);
-  } catch (err) { console.error(err); }
+
+    // Save all for searching/filtering
+    allInquiries = Array.isArray(data) ? data : [];
+    applyFiltersAndRender();
+  } catch (err) {
+    console.error(err);
+  }
 }
 
-// ===== RENDER TABLE =====
+// ===== APPLY SEARCH + FILTER + SORT THEN RENDER =====
+function applyFiltersAndRender() {
+  if (!Array.isArray(allInquiries)) return;
+
+  const query = (searchInput?.value || '').trim().toLowerCase();
+  const statusValue = statusFilter ? statusFilter.value : 'all';
+  const sortValue = sortFilter ? sortFilter.value : 'date-desc';
+
+  let result = allInquiries.slice(); // clone
+
+  // 1) Search
+  if (query) {
+    result = result.filter(inq => {
+      const client = inq.client_name || '';
+      const city = inq.city || '';
+      const style = inq.style || '';
+      const features = Array.isArray(inq.featureNames) ? inq.featureNames.join(', ') : '';
+      const status = inq.status || '';
+
+      const haystack = `${client} ${city} ${style} ${features} ${status}`.toLowerCase();
+      return haystack.includes(query);
+    });
+  }
+
+  // 2) Status filter
+  if (statusValue && statusValue !== 'all') {
+    result = result.filter(inq => (inq.status || 'pending') === statusValue);
+  }
+
+  // 3) Sort
+  result.sort((a, b) => {
+    const dateA = a.created_at ? new Date(a.created_at) : new Date(0);
+    const dateB = b.created_at ? new Date(b.created_at) : new Date(0);
+    const nameA = (a.client_name || '').toLowerCase();
+    const nameB = (b.client_name || '').toLowerCase();
+
+    switch (sortValue) {
+      case 'date-asc':
+        return dateA - dateB;
+      case 'date-desc':
+        return dateB - dateA;
+      case 'name-asc':
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      case 'name-desc':
+        if (nameA > nameB) return -1;
+        if (nameA < nameB) return 1;
+        return 0;
+      default:
+        return dateB - dateA;
+    }
+  });
+
+  renderTable(result);
+}
+
+// Wire up controls
+if (searchInput) {
+  searchInput.addEventListener('input', () => {
+    applyFiltersAndRender();
+  });
+}
+
+if (statusFilter) {
+  statusFilter.addEventListener('change', () => {
+    applyFiltersAndRender();
+  });
+}
+
+if (sortFilter) {
+  sortFilter.addEventListener('change', () => {
+    applyFiltersAndRender();
+  });
+}
+
+// ===== RENDER TABLE (NO view-details BUTTON) =====
 function renderTable(inquiries) {
   tableBody.innerHTML = '';
   inquiries.forEach(inq => {
@@ -126,38 +230,34 @@ function renderTable(inquiries) {
       statusBadge = '<span class="status-badge cancelled">❌ Cancelled</span>';
     }
 
-    // Action Buttons - UPDATED LOGIC
+    // Action Buttons (no "View Details" anymore)
     let actionButtons = '';
     
     if (status === 'pending') {
-      // Pending: View Details + Accept only
       actionButtons = `
-        <button class="view-details-btn" data-id="${inq.inquiry_id}">👁️ View Details</button>
         <button class="accept-btn" data-id="${inq.inquiry_id}">✅ Accept</button>
       `;
     } else if (status === 'accepted') {
-      // Accepted: View Details + Reply + Mark as Completed
       actionButtons = `
-        <button class="view-details-btn" data-id="${inq.inquiry_id}">👁️ View Details</button>
         <button class="reply-btn" data-id="${inq.inquiry_id}">💬 Reply</button>
         <button class="complete-btn" data-id="${inq.inquiry_id}">✔️ Mark as Completed</button>
       `;
     } else if (status === 'completed') {
-      // Completed: View Details only
       actionButtons = `
-        <button class="view-details-btn" data-id="${inq.inquiry_id}">👁️ View Details</button>
         <em style="color: #27ae60;">Project Completed</em>
       `;
     } else if (status === 'cancelled') {
-      // Cancelled: View Details only
       actionButtons = `
-        <button class="view-details-btn" data-id="${inq.inquiry_id}">👁️ View Details</button>
         <em style="color: #7f8c8d;">Cancelled</em>
       `;
     }
 
     const row = document.createElement('tr');
     row.className = status;
+
+    // store the inquiry id on the row itself
+    row.dataset.id = inq.inquiry_id;
+
     row.innerHTML = `
       <td>${inq.client_name}</td>
       <td>${inq.bedrooms || 'N/A'}</td>
@@ -169,19 +269,21 @@ function renderTable(inquiries) {
       <td>${inq.city || 'N/A'}</td>
       <td>${statusBadge}</td>
       <td>${inq.created_at ? new Date(inq.created_at).toLocaleDateString() : 'N/A'}</td>
-      <td>${actionButtons}</td>
+      <td><div class="action-buttons">${actionButtons}</div></td>
     `;
     tableBody.appendChild(row);
   });
   attachRowActions();
 }
 
-// ===== ATTACH ROW ACTIONS =====
+// ===== ATTACH ROW + BUTTON ACTIONS =====
 function attachRowActions() {
-  // View Details Button
-  document.querySelectorAll('.view-details-btn').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const inquiryId = e.target.dataset.id;
+  // Row click -> open details
+  tableBody.querySelectorAll('tr').forEach(row => {
+    const inquiryId = row.dataset.id;
+    if (!inquiryId) return;
+
+    row.addEventListener('click', () => {
       if (typeof window.openDetailsModal === 'function') {
         window.openDetailsModal(inquiryId);
       } else {
@@ -194,8 +296,24 @@ function attachRowActions() {
   // Reply Button
   document.querySelectorAll('.reply-btn').forEach(btn => {
     btn.addEventListener('click', e => {
-      if (currentInquiryId) leaveInquiryRoom(currentInquiryId);
-      currentInquiryId = e.target.dataset.id;
+      e.stopPropagation(); // prevent row click from firing
+      const inquiryId = e.target.dataset.id;
+      const inquiry = allInquiries.find(i => i.inquiry_id == inquiryId);
+
+      currentInquiryId = inquiryId;
+
+      // 🔹 Set chat title + subtitle here
+      if (chatTitleEl) {
+        const name = inquiry?.client_name || inquiry?.user_name || 'Client';
+        chatTitleEl.textContent = `Messages · ${name}`;
+      }
+      if (chatSubtitleEl) {
+        const city = inquiry?.city ? `City: ${inquiry.city}` : null;
+        const idText = `Inquiry #${inquiryId}`;
+        const pieces = [idText, city].filter(Boolean);
+        chatSubtitleEl.textContent = pieces.join(' • ');
+      }
+
       modal.style.display = 'block';
       fetchMessages(currentInquiryId);
       joinInquiryRoom(currentInquiryId);
@@ -205,6 +323,7 @@ function attachRowActions() {
   // Accept Button
   document.querySelectorAll('.accept-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
+      e.stopPropagation(); // prevent row click
       const inquiryId = e.target.dataset.id;
 
       if (!confirm('Are you sure you want to accept this inquiry?')) {
@@ -242,9 +361,10 @@ function attachRowActions() {
     });
   });
 
-  // NEW: Mark as Completed Button
+  // Mark as Completed Button
   document.querySelectorAll('.complete-btn').forEach(btn => {
     btn.addEventListener('click', async (e) => {
+      e.stopPropagation(); // prevent row click
       const inquiryId = e.target.dataset.id;
 
       if (!confirm('Mark this project as completed?')) {
@@ -359,7 +479,7 @@ document.getElementById('sendMsgBtn').addEventListener('click', async () => {
       imgInput.value = '';
       imagePreview.style.display = 'none';
       fileLabel.classList.remove('has-file');
-      fileLabel.textContent = '🔎';
+      fileLabel.textContent = '📎';
 
     } else {
       const res = await fetch('http://localhost:3000/api/v1/admin/messages/send', {

@@ -21,7 +21,7 @@ loginForm.addEventListener('submit', async (e) => {
       localStorage.setItem('adminToken', data.token);
       window.location.href = './dashboard.html';
     } else {
-      loginMessage.textContent = data.message;
+      loginMessage.textContent = data.message || 'Login failed.';
     }
   } catch (err) {
     loginMessage.textContent = 'Server error. Try again.';
@@ -32,4 +32,17 @@ loginForm.addEventListener('submit', async (e) => {
 // Optional: redirect if already logged in
 if (localStorage.getItem('adminToken')) {
   window.location.href = './dashboard.html';
+}
+
+/* ===== Hover → blurred GIF background ===== */
+const loginContainer = document.querySelector('.login-container');
+
+if (loginContainer) {
+  loginContainer.addEventListener('mouseenter', () => {
+    document.body.classList.add('bg-login-gif');
+  });
+
+  loginContainer.addEventListener('mouseleave', () => {
+    document.body.classList.remove('bg-login-gif');
+  });
 }

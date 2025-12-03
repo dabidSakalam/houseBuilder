@@ -24,6 +24,9 @@
 
     <!-- Left Side: Background Image + Start Button -->
     <div class="welcome-left">
+      <!-- Layer used for fading slideshow -->
+      <div class="slideshow-layer"></div>
+
       <div class="overlay">
         <a href="home.html" class="start-btn">Start Designing</a>
       </div>
@@ -43,14 +46,80 @@
         </div>
 
         <p class="description">
-          Visualize your dream home with our 3D home models that change according
-          to your selection and keep track of costs in real-time. 
-          Let’s bring your vision to life step by step.
+          Explore 3D home designs that update with your selections
+          and easily submit an inquiry  
+          when you’re ready to move forward.
         </p>
+
+        <!-- Login button -->
+        <div class="cta-row">
+          <a href="login.html" class="login-btn">Login</a>
+        </div>
       </div>
     </div>
 
   </section>
+
+  <!-- Slideshow script (fade transition) -->
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const leftPanel = document.querySelector('.welcome-left');
+      const slideLayer = document.querySelector('.slideshow-layer');
+
+      // Read the working CSS background URL for house.jpg
+      const computedBg = getComputedStyle(leftPanel).backgroundImage;
+      const match = computedBg && computedBg.match(/url\(["']?(.*house\.jpg)["']?\)/i);
+
+      // Base URL where house images live (everything up to "house.jpg")
+      const base = match && match[1]
+        ? match[1].replace(/house\.jpg$/i, '')
+        : '';
+
+      const files = [
+        base + 'house.jpg',
+        base + 'house1.jpg',
+        base + 'house2.jpg',
+        base + 'house3.jpg'
+      ];
+
+      let current = 0;
+
+      function applyBackground(first = false) {
+        const url = files[current];
+
+        if (first) {
+          // First image: no fade
+          slideLayer.style.backgroundImage = `url("${url}")`;
+          slideLayer.style.backgroundPosition = 'center center';
+          slideLayer.style.backgroundSize = 'cover';
+          slideLayer.style.backgroundRepeat = 'no-repeat';
+          slideLayer.style.opacity = 1;
+          return;
+        }
+
+        // Fade out
+        slideLayer.style.opacity = 0;
+
+        // After half the fade, swap image, then fade back in
+        setTimeout(() => {
+          slideLayer.style.backgroundImage = `url("${url}")`;
+          slideLayer.style.backgroundPosition = 'center center';
+          slideLayer.style.backgroundSize = 'cover';
+          slideLayer.style.backgroundRepeat = 'no-repeat';
+          slideLayer.style.opacity = 1;
+        }, 750); // half of transition duration (0.8s) for a smooth effect
+      }
+
+      // Show initial image
+      applyBackground(true);
+
+      // Change image every 5 seconds
+      setInterval(() => {
+        current = (current + 1) % files.length;
+        applyBackground();
+      }, 5000);
+    });
+  </script>
 
   <!-- Bootstrap JS -->
   <script 

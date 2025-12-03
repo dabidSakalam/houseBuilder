@@ -1,233 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+    integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA=="
+    crossorigin="anonymous"
+    referrerpolicy="no-referrer"
+  />
+
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>HouseBuilder - Project Estimate</title>
   <link rel="stylesheet" href="./styles/home.css" />
   <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
-  
-  <!-- ===== MODAL STYLES ===== -->
-  <style>
-    /* Modal Overlay */
-    .modal-overlay {
-        display: none;
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.7);
-        z-index: 9999;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .modal-overlay.active {
-        display: flex;
-    }
-
-    /* Modal Container */
-    .inquiry-modal {
-        background: white;
-        width: 90%;
-        max-width: 600px;
-        max-height: 90vh;
-        overflow-y: auto;
-        border-radius: 12px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-        animation: slideDown 0.3s ease;
-    }
-
-    @keyframes slideDown {
-        from {
-            transform: translateY(-50px);
-            opacity: 0;
-        }
-        to {
-            transform: translateY(0);
-            opacity: 1;
-        }
-    }
-
-    /* Modal Header */
-    .modal-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-        padding: 20px 30px;
-        border-radius: 12px 12px 0 0;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .modal-header h2 {
-        margin: 0;
-        font-size: 24px;
-    }
-
-    .close-modal {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 28px;
-        cursor: pointer;
-        transition: transform 0.2s;
-    }
-
-    .close-modal:hover {
-        transform: rotate(90deg);
-    }
-
-    /* Modal Body */
-    .modal-body {
-        padding: 30px;
-    }
-
-    .form-group {
-        margin-bottom: 25px;
-    }
-
-    .form-group label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 8px;
-        color: #333;
-        font-size: 14px;
-    }
-
-    .form-group textarea {
-        width: 100%;
-        padding: 12px;
-        border: 2px solid #e0e0e0;
-        border-radius: 8px;
-        font-size: 14px;
-        font-family: inherit;
-        resize: vertical;
-        min-height: 120px;
-        transition: border-color 0.3s;
-        box-sizing: border-box;
-    }
-
-    .form-group textarea:focus {
-        outline: none;
-        border-color: #667eea;
-    }
-
-    /* Image Upload */
-    .image-upload-area {
-        border: 2px dashed #ccc;
-        border-radius: 8px;
-        padding: 30px;
-        text-align: center;
-        cursor: pointer;
-        transition: all 0.3s;
-        background: #f9f9f9;
-    }
-
-    .image-upload-area:hover {
-        border-color: #667eea;
-        background: #f0f4ff;
-    }
-
-    .upload-icon {
-        font-size: 48px;
-        color: #667eea;
-        margin-bottom: 10px;
-    }
-
-    #imageInput {
-        display: none;
-    }
-
-    /* Image Preview */
-    .image-preview-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-        gap: 15px;
-        margin-top: 20px;
-    }
-
-    .image-preview-item {
-        position: relative;
-        border-radius: 8px;
-        overflow: hidden;
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .image-preview-item img {
-        width: 100%;
-        height: 120px;
-        object-fit: cover;
-        display: block;
-    }
-
-    .remove-image {
-        position: absolute;
-        top: 5px;
-        right: 5px;
-        background: rgba(255, 0, 0, 0.8);
-        color: white;
-        border: none;
-        border-radius: 50%;
-        width: 25px;
-        height: 25px;
-        cursor: pointer;
-        font-size: 16px;
-    }
-
-    /* Modal Footer */
-    .modal-footer {
-        padding: 20px 30px;
-        border-top: 1px solid #e0e0e0;
-        display: flex;
-        justify-content: flex-end;
-        gap: 15px;
-    }
-
-    .btn {
-        padding: 12px 30px;
-        border: none;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-    }
-
-    .btn-cancel {
-        background: #f0f0f0;
-        color: #666;
-    }
-
-    .btn-submit {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
-    }
-
-    .btn-submit:disabled {
-        opacity: 0.5;
-        cursor: not-allowed;
-    }
-
-    .char-counter {
-        text-align: right;
-        font-size: 12px;
-        color: #999;
-        margin-top: 5px;
-    }
-  </style>
 </head>
+
+  <button
+  class="theme-toggle"
+  id="themeToggle"
+  type="button"
+  aria-label="Toggle dark mode"
+>
+  <i class="fa-solid fa-moon"></i>
+</button>
+
+
 <body>
   <header class="navbar">
-    <div class="logo">🏠 <strong><a href="./index.html">HouseBuilder</a></strong></div>
-    <nav>
-      <div class="user-menu">
-        <div class="user-icon" id="userIcon">👤</div>
+    <!-- Left: HB logo + text (matches landing page) -->
+    <a href="./index.html" class="brand">
+      <div class="brand-logo-box">HB</div>
+      <div class="brand-text">
+        <span class="brand-title">HouseBuilder</span>
+        <span class="brand-tagline">Your Partner in Residential Construction</span>
+      </div>
+    </a>
+
+    <!-- Right: Login (guest) + user menu (logged in) -->
+    <nav class="nav-right">
+      <!-- Show this when logged in (JS can hide the login button and show this) -->
+      <div class="user-menu" id="userMenu">
+        <button class="user-icon" id="userIcon" aria-label="Open account menu">
+          👤
+        </button>
+
         <div class="user-dropdown" id="userDropdown">
-          <button onclick="window.location.href='profile.html'">Profile</button>
-          <a href="inbox.html">Inbox</a>
-          <button id="logoutBtn">Logout</button>
+          <button class="dropdown-item" onclick="window.location.href='profile.html'">
+            Profile
+          </button>
+          <button class="dropdown-item" onclick="window.location.href='inbox.html'">
+            Inbox
+          </button>
+          <button class="dropdown-item dropdown-logout" id="logoutBtn">
+            Logout
+          </button>
         </div>
       </div>
     </nav>
@@ -238,6 +65,7 @@
     <section class="design-section">
       <h2>Re-imagine and Explore Your Dream Home</h2>
       <p>Selection of House Models</p>
+
       <div class="design-box">
         <model-viewer
           src="../../public/models/Modern/Modern(1F).glb"
@@ -247,7 +75,50 @@
           style="width: 100%; height: 400px;"
         ></model-viewer>
       </div>
-      <button class="btn-primary" id="estimateBtn">Confirm</button>
+
+      <!-- New actions / helpers under the model -->
+      <div class="design-actions">
+        <!-- full-width Confirm button -->
+        <button class="btn-primary btn-confirm-full" id="estimateBtn">
+          Confirm selection
+        </button>
+
+        <!-- Interaction tips -->
+        <div class="interaction-tips">
+          <span class="tip-pill">
+            <i class="fa-solid fa-computer-mouse"></i>
+            Drag to rotate
+          </span>
+          <span class="tip-pill">
+            <i class="fa-solid fa-computer-mouse"></i>
+            Scroll to zoom
+          </span>
+          <span class="tip-pill">
+            <span class="tip-key">Shift</span> + drag to pan
+          </span>
+        </div>
+
+        <!-- Step indicator -->
+        <div class="step-indicator" aria-label="Progress">
+          <span class="step step-active" data-step="1">1. Choose Model</span>
+          <span class="step-arrow">→</span>
+          <span class="step" data-step="2">2. Adjust Details</span>
+          <span class="step-arrow">→</span>
+          <span class="step" data-step="3">3. Review &amp; Submit</span>
+        </div>
+
+        <!-- Save + disclaimer row -->
+        <div class="design-meta-row">
+          <button type="button" class="save-design-btn" id="saveDesignBtn">
+            <i class="far fa-heart"></i>
+            <span>Save this design</span>
+          </button>
+
+          <p class="design-disclaimer">
+            *All renders are for visualization only. Final plans may vary.
+          </p>
+        </div>
+      </div>
     </section>
 
     <!-- Right: Filters -->
@@ -290,31 +161,85 @@
     <div class="estimate-box">
       <h3>Project Summary</h3>
       <div class="projectSummary"></div>
-      <button class="btn-primary">Send to Contractor</button>
-      <small>*Summary only. Prices removed for display purposes.</small>
+      <button class="btn-primary">Send to Contractor</button><br>
+      <small>*Please confirm all selected options are correct before submitting to the contractor.</small>
     </div>
   </section>
 
-  <footer class="footer">
-    <div class="footer-card">
-      <h3>3D made House Models</h3>
-      <p>Browse curated images and designs to find inspiration for your dream home.</p>
+  <!-- NEW: Experience / Footer Section -->
+  <section class="experience-section">
+    <div class="experience-inner">
+      <div class="experience-row">
+        <div class="experience-text">
+          <h3>3D Crafted House Models</h3>
+          <p>
+            Explore 3D house models built with real-world proportions.
+            Rotate, zoom, and view from every angle before you commit.
+          </p>
+        </div>
+        <div class="experience-media">
+          <img
+            src="https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExN2s3bW4zOThyNGc3ZTBkMzl5cXhtNHlnNmZmbWtvOHVlZmt3cXR1ciZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OmfuBa7G55geGgC2Kn/giphy.gif"
+            alt="3D house models animation"
+          />
+        </div>
+      </div>
+
+      <div class="experience-row">
+        <div class="experience-text">
+          <h3>Trusted, Experienced Contractors</h3>
+          <p>
+            Get connected with vetted contractors who specialize in residential
+            projects and understand local building standards and timelines.
+          </p>
+        </div>
+        <div class="experience-media">
+          <img
+            src="https://media.giphy.com/media/v1.Y2lkPWVjZjA1ZTQ3c2JtcHRiczV4NWFrOGVkcmNrajhnNXY2c3BxOGl0ZmN2NzdhcHB2bCZlcD12MV9naWZzX3JlbGF0ZWQmY3Q9Zw/gvmouEnU4vZLwtcueW/giphy.gif"
+            alt="Contractor collaboration animation"
+          />
+        </div>
+      </div>
+
+      <div class="experience-row">
+        <div class="experience-text">
+          <h3>Personalized Project Planning</h3>
+          <p>
+            Your inquiry, desired features, and location are all combined into a tailored project
+            summary that’s ready to share, refine, and build on.
+          </p>
+        </div>
+        <div class="experience-media">
+          <img
+            src="https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExdmJubGI5MXd2YXBkdmNyMzl6azY4Y2FnaXA0b3B4Z3p0N3UyeTE3ZyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/Z9lq8lZ5Cxg6j5bgmr/giphy.gif"
+            alt="Project planning animation"
+          />
+        </div>
+      </div>
+
+      <div class="experience-footer">
+        <span>© 2025 HouseBuilder. All rights reserved.</span>
+
+        <div class="footer-socials">
+          <a href="https://facebook.com/khiaramarie.delmundo.18" target="_blank" aria-label="HouseBuilder on Facebook">
+            <i class="fab fa-facebook-f"></i>
+          </a>
+          <a href="https://instagram.com/_rentfl" target="_blank" aria-label="HouseBuilder on Instagram">
+            <i class="fab fa-instagram"></i>
+          </a>
+          <a href="https://x.com/yourpage" target="_blank" aria-label="HouseBuilder on X (Twitter)">
+            <i class="fab fa-x-twitter"></i>
+          </a>
+        </div>
+      </div>
     </div>
-    <div class="footer-card">
-      <h3>Experienced Contractors</h3>
-      <p>Connect with professionals who bring your vision to life with quality craftsmanship.</p>
-    </div>
-    <div class="footer-card">
-      <h3>Personalized Project</h3>
-      <p>Plan your project according to your specifications and location.</p>
-    </div>
-  </footer>
+  </section>
 
   <!-- ===== INQUIRY MODAL (EMBEDDED) ===== -->
   <div class="modal-overlay" id="inquiryModal">
     <div class="inquiry-modal">
       <div class="modal-header">
-        <h2>📝 Add Details to Your Inquiry</h2>
+        <h2>Add Details to Your Inquiry</h2>
         <button class="close-modal" id="closeModal">&times;</button>
       </div>
 
@@ -324,8 +249,8 @@
             <label for="clientMessage">
               Your Message <span style="color: #999;">(Optional)</span>
             </label>
-            <textarea 
-              id="clientMessage" 
+            <textarea
+              id="clientMessage"
               placeholder="Tell us more about your dream house..."
               maxlength="1000"
             ></textarea>
@@ -341,7 +266,7 @@
               <p><strong>Click to upload</strong> or drag and drop</p>
               <small>PNG, JPG up to 5MB (Max 5 images)</small>
             </div>
-            <input type="file" id="imageInput" accept="image/png, image/jpeg, image/jpg" multiple>
+            <input type="file" id="imageInput" accept="image/png, image/jpeg, image/jpg" multiple />
             <div class="image-preview-container" id="imagePreview"></div>
           </div>
         </form>
@@ -354,157 +279,379 @@
     </div>
   </div>
 
-  <!-- ===== MODAL SCRIPT ===== -->
-  <script>
-    const modal = document.getElementById('inquiryModal');
-    const closeModalBtn = document.getElementById('closeModal');
-    const cancelBtn = document.getElementById('cancelBtn');
-    const submitBtn = document.getElementById('submitInquiryBtn');
-    const uploadArea = document.getElementById('uploadArea');
-    const imageInput = document.getElementById('imageInput');
-    const imagePreview = document.getElementById('imagePreview');
-    const clientMessage = document.getElementById('clientMessage');
-    const charCount = document.getElementById('charCount');
+  <!-- ===== MODAL + SAVE DESIGN + STEP INDICATOR SCRIPT ===== -->
+<script>
+  const modal = document.getElementById('inquiryModal');
+  const closeModalBtn = document.getElementById('closeModal');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const submitBtn = document.getElementById('submitInquiryBtn');
+  const uploadArea = document.getElementById('uploadArea');
+  const imageInput = document.getElementById('imageInput');
+  const imagePreview = document.getElementById('imagePreview');
+  const clientMessage = document.getElementById('clientMessage');
+  const charCount = document.getElementById('charCount');
 
-    let selectedImages = [];
-    const MAX_IMAGES = 5;
-    const MAX_SIZE = 5 * 1024 * 1024;
+  let selectedImages = [];
+  const MAX_IMAGES = 5;
+  const MAX_SIZE = 5 * 1024 * 1024;
 
-    // Character Counter
-    clientMessage.addEventListener('input', () => {
-      charCount.textContent = clientMessage.value.length;
-    });
+  // Character Counter
+  clientMessage.addEventListener('input', () => {
+    charCount.textContent = clientMessage.value.length;
+  });
 
-    // Open Modal
-    function openInquiryModal() {
-      modal.classList.add('active');
-      document.body.style.overflow = 'hidden';
-    }
+  // Open Modal
+  function openInquiryModal() {
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
 
-    // Close Modal
-    function closeInquiryModal() {
-      modal.classList.remove('active');
-      document.body.style.overflow = 'auto';
-      clientMessage.value = '';
-      charCount.textContent = '0';
-      selectedImages = [];
-      imagePreview.innerHTML = '';
-      imageInput.value = '';
-    }
+  // Close Modal
+  function closeInquiryModal() {
+    modal.classList.remove('active');
+    document.body.style.overflow = 'auto';
+    clientMessage.value = '';
+    charCount.textContent = '0';
+    selectedImages = [];
+    imagePreview.innerHTML = '';
+    imageInput.value = '';
+  }
 
-    closeModalBtn.addEventListener('click', closeInquiryModal);
-    cancelBtn.addEventListener('click', closeInquiryModal);
-    modal.addEventListener('click', (e) => {
-      if (e.target === modal) closeInquiryModal();
-    });
+  closeModalBtn.addEventListener('click', closeInquiryModal);
+  cancelBtn.addEventListener('click', closeInquiryModal);
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) closeInquiryModal();
+  });
 
-    // Upload Area
-    uploadArea.addEventListener('click', () => imageInput.click());
+  // Upload Area
+  uploadArea.addEventListener('click', () => imageInput.click());
 
-    uploadArea.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      uploadArea.style.borderColor = '#667eea';
-    });
+  uploadArea.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#667eea';
+  });
 
-    uploadArea.addEventListener('dragleave', () => {
-      uploadArea.style.borderColor = '#ccc';
-    });
+  uploadArea.addEventListener('dragleave', () => {
+    uploadArea.style.borderColor = '#ccc';
+  });
 
-    uploadArea.addEventListener('drop', (e) => {
-      e.preventDefault();
-      uploadArea.style.borderColor = '#ccc';
-      handleFiles(e.dataTransfer.files);
-    });
+  uploadArea.addEventListener('drop', (e) => {
+    e.preventDefault();
+    uploadArea.style.borderColor = '#ccc';
+    handleFiles(e.dataTransfer.files);
+  });
 
-    imageInput.addEventListener('change', (e) => handleFiles(e.target.files));
+  imageInput.addEventListener('change', (e) => handleFiles(e.target.files));
 
-    function handleFiles(files) {
-      const validFiles = Array.from(files).filter(file => {
-        if (!file.type.match('image/(jpeg|png)')) {
-          alert('Only JPG and PNG allowed');
-          return false;
-        }
-        if (file.size > MAX_SIZE) {
-          alert(`${file.name} is too large (max 5MB)`);
-          return false;
-        }
-        return true;
-      });
-
-      if (selectedImages.length + validFiles.length > MAX_IMAGES) {
-        alert(`Max ${MAX_IMAGES} images allowed`);
-        return;
+  function handleFiles(files) {
+    const validFiles = Array.from(files).filter((file) => {
+      if (!file.type.match('image/(jpeg|png)')) {
+        alert('Only JPG and PNG allowed');
+        return false;
       }
+      if (file.size > MAX_SIZE) {
+        alert(`${file.name} is too large (max 5MB)`);
+        return false;
+      }
+      return true;
+    });
 
-      validFiles.forEach(file => {
-        selectedImages.push(file);
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          const div = document.createElement('div');
-          div.className = 'image-preview-item';
-          div.innerHTML = `
-            <img src="${e.target.result}" alt="Preview">
-            <button class="remove-image" data-filename="${file.name}">×</button>
-          `;
-          imagePreview.appendChild(div);
-
-          div.querySelector('.remove-image').addEventListener('click', function() {
-            selectedImages = selectedImages.filter(img => img.name !== this.dataset.filename);
-            div.remove();
-          });
-        };
-        reader.readAsDataURL(file);
-      });
+    if (selectedImages.length + validFiles.length > MAX_IMAGES) {
+      alert(`Max ${MAX_IMAGES} images allowed`);
+      return;
     }
 
-    // Submit
-    submitBtn.addEventListener('click', async () => {
-      const inquiryData = window.getInquiryFormData();
-      if (!inquiryData) {
-        alert('Please fill the form first');
-        return;
-      }
+    validFiles.forEach((file) => {
+      selectedImages.push(file);
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const div = document.createElement('div');
+        div.className = 'image-preview-item';
+        div.innerHTML = `
+          <img src="${e.target.result}" alt="Preview">
+          <button class="remove-image" data-filename="${file.name}">×</button>
+        `;
+        imagePreview.appendChild(div);
 
-      const formData = new FormData();
-      Object.keys(inquiryData).forEach(key => {
-        formData.append(key, key === 'features' ? JSON.stringify(inquiryData[key]) : inquiryData[key]);
-      });
-      formData.append('clientMessage', clientMessage.value.trim());
-      selectedImages.forEach(img => formData.append('designImages', img));
-
-      submitBtn.disabled = true;
-      submitBtn.textContent = 'Sending...';
-
-      try {
-        const res = await fetch('http://localhost:3000/api/v1/estimates/submit', {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('authToken')}` },
-          body: formData
+        div.querySelector('.remove-image').addEventListener('click', function () {
+          selectedImages = selectedImages.filter((img) => img.name !== this.dataset.filename);
+          div.remove();
         });
+      };
+      reader.readAsDataURL(file);
+    });
+  }
 
-        const data = await res.json();
-        if (res.ok) {
-          alert('✅ Inquiry submitted successfully!');
-          closeInquiryModal();
-          if (typeof window.onInquirySuccess === 'function') {
-            window.onInquirySuccess();
-          }
-          setTimeout(() => window.location.href = 'inbox.html', 1500);
-        } else {
-          alert('❌ ' + (data.message || 'Failed to submit'));
-        }
-      } catch (err) {
-        console.error(err);
-        alert('❌ An error occurred');
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Inquiry';
+  // ===== STEP INDICATOR LOGIC =====
+  function updateStepIndicator(stepNumber) {
+    const steps = document.querySelectorAll('.step-indicator .step');
+    steps.forEach((stepEl) => {
+      const s = parseInt(stepEl.dataset.step, 10);
+      if (s === stepNumber) {
+        stepEl.classList.add('step-active');
+      } else {
+        stepEl.classList.remove('step-active');
       }
     });
+  }
 
-    // Export function
-    window.openInquiryModal = openInquiryModal;
-  </script>
+  // default: step 1 active
+  updateStepIndicator(1);
+
+  // Move to step 2 when user adjusts any details
+  const adjustFields = ['bedrooms', 'bathrooms', 'style', 'unit', 'floors', 'city'];
+  adjustFields.forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener('change', () => updateStepIndicator(2));
+    }
+  });
+
+  // features as step 2 as well
+  const featuresContainer = document.getElementById('featuresContainer');
+  if (featuresContainer) {
+    featuresContainer.addEventListener('change', (e) => {
+      if (e.target.matches('input[type="checkbox"]')) {
+        updateStepIndicator(2);
+      }
+    });
+  }
+
+  // Move to step 3 when confirm is clicked
+  const estimateBtn = document.getElementById('estimateBtn');
+  if (estimateBtn) {
+    estimateBtn.addEventListener('click', () => {
+      updateStepIndicator(3);
+    });
+  }
+
+  // ===== NIGHT MODE TOGGLE =====
+  const themeToggle = document.getElementById('themeToggle');
+  const THEME_KEY = 'hb_theme';
+
+  function applyTheme(theme) {
+    const body = document.body;
+    if (theme === 'dark') {
+      body.classList.add('dark-mode');
+    } else {
+      body.classList.remove('dark-mode');
+    }
+
+    if (themeToggle) {
+      const icon = themeToggle.querySelector('i');
+      if (!icon) return;
+
+      if (theme === 'dark') {
+        icon.classList.remove('fa-moon');
+        icon.classList.add('fa-sun');
+      } else {
+        icon.classList.remove('fa-sun');
+        icon.classList.add('fa-moon');
+      }
+    }
+  }
+
+  function initTheme() {
+    let stored = localStorage.getItem(THEME_KEY);
+    if (!stored) {
+      // fall back to OS preference
+      const prefersDark =
+        window.matchMedia &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches;
+      stored = prefersDark ? 'dark' : 'light';
+    }
+    applyTheme(stored);
+  }
+
+  if (themeToggle) {
+    themeToggle.addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-mode');
+      const nextTheme = isDark ? 'light' : 'dark';
+      applyTheme(nextTheme);
+      localStorage.setItem(THEME_KEY, nextTheme);
+    });
+  }
+
+  // ===== SAVE DESIGN LOGIC =====
+  const saveDesignBtn = document.getElementById('saveDesignBtn');
+  const SAVED_DESIGN_KEY = 'hb_savedDesign';
+
+  function collectCurrentDesign() {
+    const modelViewer = document.querySelector('model-viewer');
+    const featureCheckboxes = document.querySelectorAll(
+      '#featuresContainer input[type="checkbox"]:checked'
+    );
+
+    const features = Array.from(featureCheckboxes)
+      .map((cb) => {
+        if (cb.value) return cb.value;
+        const label = cb.parentElement?.textContent;
+        return label ? label.trim() : '';
+      })
+      .filter(Boolean);
+
+    return {
+      modelSrc: modelViewer ? modelViewer.getAttribute('src') : null,
+      bedrooms: document.getElementById('bedrooms')?.value || '',
+      bathrooms: document.getElementById('bathrooms')?.value || '',
+      style: document.getElementById('style')?.value || '',
+      unit: document.getElementById('unit')?.value || '',
+      floors: document.getElementById('floors')?.value || '',
+      city: document.getElementById('city')?.value || '',
+      features
+    };
+  }
+
+  function applySavedDesign(design) {
+    if (!design) return;
+
+    const setVal = (id, value) => {
+      const el = document.getElementById(id);
+      if (el && value !== undefined && value !== null && value !== '') {
+        el.value = value;
+      }
+    };
+
+    setVal('bedrooms', design.bedrooms);
+    setVal('bathrooms', design.bathrooms);
+    setVal('style', design.style);
+    setVal('unit', design.unit);
+    setVal('floors', design.floors);
+    setVal('city', design.city);
+
+    if (Array.isArray(design.features) && design.features.length) {
+      const checkboxes = document.querySelectorAll('#featuresContainer input[type="checkbox"]');
+      checkboxes.forEach((cb) => {
+        const labelText = cb.parentElement?.textContent?.trim();
+        const val = cb.value || labelText;
+        cb.checked = !!design.features.find((f) => f === val);
+      });
+    }
+
+    if (design.modelSrc) {
+      const modelViewer = document.querySelector('model-viewer');
+      if (modelViewer) modelViewer.setAttribute('src', design.modelSrc);
+    }
+  }
+
+  function setSaveButtonState(isSaved) {
+    if (!saveDesignBtn) return;
+    const icon = saveDesignBtn.querySelector('i');
+    const label = saveDesignBtn.querySelector('span');
+
+    if (isSaved) {
+      saveDesignBtn.classList.add('saved');
+      icon.classList.remove('far');
+      icon.classList.add('fas');
+      label.textContent = 'Saved';
+    } else {
+      saveDesignBtn.classList.remove('saved');
+      icon.classList.remove('fas');
+      icon.classList.add('far');
+      label.textContent = 'Save this design';
+    }
+  }
+
+  window.__hbSavedDesign = null;
+  (function initSavedDesign() {
+    const raw = localStorage.getItem(SAVED_DESIGN_KEY);
+    if (!raw) {
+      setSaveButtonState(false);
+      return;
+    }
+
+    try {
+      const design = JSON.parse(raw);
+      window.__hbSavedDesign = design;
+      setSaveButtonState(true);
+    } catch (e) {
+      console.error('Failed to parse saved design', e);
+      setSaveButtonState(false);
+    }
+  })();
+
+  window.hbApplySavedDesignIfAny = function () {
+    if (!window.__hbSavedDesign) return;
+    applySavedDesign(window.__hbSavedDesign);
+    setSaveButtonState(true);
+  };
+
+  if (saveDesignBtn) {
+    saveDesignBtn.addEventListener('click', () => {
+      const currentlySaved = saveDesignBtn.classList.contains('saved');
+
+      if (currentlySaved) {
+        localStorage.removeItem(SAVED_DESIGN_KEY);
+        window.__hbSavedDesign = null;
+        setSaveButtonState(false);
+      } else {
+        const design = collectCurrentDesign();
+        localStorage.setItem(SAVED_DESIGN_KEY, JSON.stringify(design));
+        window.__hbSavedDesign = design;
+        setSaveButtonState(true);
+      }
+    });
+  }
+
+  // === Submit Inquiry ===
+  submitBtn.addEventListener('click', async () => {
+    const inquiryData = window.getInquiryFormData();
+    if (!inquiryData) {
+      alert('Please fill the form first');
+      return;
+    }
+
+    const formData = new FormData();
+    Object.keys(inquiryData).forEach((key) => {
+      formData.append(
+        key,
+        key === 'features' ? JSON.stringify(inquiryData[key]) : inquiryData[key]
+      );
+    });
+    formData.append('clientMessage', clientMessage.value.trim());
+    selectedImages.forEach((img) => formData.append('designImages', img));
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Sending...';
+
+    try {
+      const res = await fetch('http://localhost:3000/api/v1/estimates/submit', {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${localStorage.getItem('authToken')}` },
+        body: formData
+      });
+
+      const data = await res.json();
+      if (res.ok) {
+        alert('✅ Inquiry submitted successfully!');
+        closeInquiryModal();
+        if (typeof window.onInquirySuccess === 'function') {
+          window.onInquirySuccess();
+        }
+        setTimeout(() => (window.location.href = 'profile.html'), 1500);
+      } else {
+        alert('❌ ' + (data.message || 'Failed to submit'));
+      }
+    } catch (err) {
+      console.error(err);
+      alert('❌ An error occurred');
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Submit Inquiry';
+    }
+  });
+
+  // Export function for other scripts if needed
+  window.openInquiryModal = openInquiryModal;
+
+  // On load: apply theme + saved design
+  window.addEventListener('load', () => {
+    initTheme();
+    if (window.hbApplySavedDesignIfAny) {
+      window.hbApplySavedDesignIfAny();
+    }
+  });
+</script>
 
   <script type="module" src="./scripts/estimateScript.js"></script>
 </body>

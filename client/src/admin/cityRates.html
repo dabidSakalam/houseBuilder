@@ -10,20 +10,25 @@
 <body>
   <header class="admin-header">
     <h1>Cities</h1>
-    <nav>
-      <a href="dashboard.html">Statistics</a>
-      <a href="models.html">Models</a>
-      <a href="cityRates.html">City</a>
-      <a href="features.html">Features</a>
-      <a href="Inquiries.html">Inquiries</a>
-      <a href="adminLogin.html" id="logoutBtn" class="btn-logout">Logout</a>
-    </nav>
+
+    <!-- Search beside title -->
+    <section class="city-header-controls">
+      <input type="text" id="searchCity" placeholder="Search city...">
+    </section>
+
+ <nav>
+    <a href="dashboard.html">Statistics</a>
+    <a href="models.html">Models</a>
+    <a href="cityRates.html" class="active">City</a>
+    <a href="features.html">Features</a>
+    <a href="inquiries.html">Inquiries</a>
+    <button id="logoutBtn" class="btn-logout" type="button">Logout</button>
+  </nav>
   </header>
 
   <main class="admin-main">
     <section class="rate-controls">
-      <button id="addCityBtn">Add City</button>
-      <input type="text" id="searchCity" placeholder="Search city...">
+      <button id="addCityBtn">+ Add City</button>
     </section>
 
     <section class="rate-table-section">
@@ -41,6 +46,41 @@
     </section>
   </main>
 
+  <!-- 🌙 Floating dark mode toggle -->
+  <button
+    id="theme-toggle"
+    class="theme-toggle-fab"
+    aria-label="Toggle dark mode"
+    type="button"
+  >
+    🌙
+  </button>
+
   <script type="module" src="./scripts/cityRates.js"></script>
+
+  <!-- 🌙 Theme toggle logic (same as other pages) -->
+  <script>
+    const root = document.documentElement;
+    const themeToggleBtn = document.getElementById('theme-toggle');
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        root.classList.add('dark');
+        themeToggleBtn.textContent = '☀️';
+      } else {
+        root.classList.remove('dark');
+        themeToggleBtn.textContent = '🌙';
+      }
+    }
+
+    const savedTheme = localStorage.getItem('admin-theme');
+    applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+
+    themeToggleBtn.addEventListener('click', () => {
+      const newTheme = root.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('admin-theme', newTheme);
+    });
+  </script>
 </body>
 </html>

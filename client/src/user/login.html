@@ -7,36 +7,61 @@
   <link rel="stylesheet" href="./styles/loginStyle.css" />
 </head>
 <body>
-  <header class="navbar">
-    <div class="logo">🏠 
-      <strong><a href="index.html">HouseBuilder</a></strong>
-
-      <a class="adminLogin" href="../admin/adminLogin.html">👤</a>
+  <!-- HEADER (same style as admin, but "User Portal") -->
+  <header class="login-header">
+    <div class="login-logo">HB</div>
+    <div class="login-title">
+      <span class="login-title-main">HouseBuilder</span>
+      <span class="login-title-sub">User Portal</span>
     </div>
   </header>
 
-  <main class="login-container">
-    <form class="login-box" id="loginForm">
-      <h2>Welcome Back</h2>
-      <p>Log in to access your personalized house designs and estimates.</p>
+  <!-- MAIN (centers the card) -->
+  <main class="login-main">
+    <div class="login-container">
+      <h1>User Login</h1>
 
-      <label for="email">Email Address</label>
-      <input type="email" id="email" name="email" placeholder="Enter your email" required />
+      <form class="auth-form" id="loginForm">
+        <label for="email">Email Address</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          placeholder="Enter your email"
+          required
+        />
 
-      <label for="password">Password</label>
-      <input type="password" id="password" name="password" placeholder="Enter your password" required />
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter your password"
+          required
+        />
 
-      <button type="submit" class="btn-primary">Login</button>
+        <!-- Main login button -->
+        <button type="submit" class="btn-primary">Login</button>
 
-      <div class="links">
-        <a href="./forgotPassword.html">Forgot Password?</a>
-        <a href="./register.html">Create Account</a>
-      </div>
-    </form>
+        <!-- Admin login button BELOW login -->
+        <a class="admin-login-btn" href="../admin/adminLogin.html">
+          Admin Login
+        </a>
+
+        <!-- Links row -->
+        <div class="links">
+          <a href="./forgotPassword.html">Forgot Password?</a>
+          <a href="./register.html">Create Account</a>
+        </div>
+
+        <p id="loginMessage"></p>
+      </form>
+    </div>
   </main>
 
-  <footer class="footer">
-    <p>© 2025 HouseBuilder. All rights reserved.</p>
+  <!-- FOOTER -->
+  <footer class="login-footer">
+    © 2025 HouseBuilder. All rights reserved.
   </footer>
 
   <script src="./scripts/loginScript.js"></script>

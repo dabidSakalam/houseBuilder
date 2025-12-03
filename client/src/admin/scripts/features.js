@@ -27,13 +27,16 @@ function renderFeatures(list) {
     tr.innerHTML = `
       <td>${item.name}</td>
       <td>
-        <button class="edit-btn" data-id="${item.feature_id}">Edit</button>
-        <button class="delete-btn" data-id="${item.feature_id}">Delete</button>
+        <div class="action-buttons">
+          <button class="feature-action-btn edit-btn" data-id="${item.feature_id}">Edit</button>
+          <button class="feature-action-btn delete-btn" data-id="${item.feature_id}">Delete</button>
+        </div>
       </td>
     `;
     featureTableBody.appendChild(tr);
   });
 }
+
 
 // Search
 searchInput.addEventListener('input', () => {

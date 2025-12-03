@@ -1,15 +1,26 @@
+/* ===== RESET ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ===== PAGE BACKGROUND (animated gradient) ===== */
 body {
   font-family: Arial, sans-serif;
   background: linear-gradient(270deg, #3c3e10, #3d63cb, #243a77, #3c3e10);
   background-size: 600% 600%;
   animation: gradientShift 10s ease-in-out infinite;
+  min-height: 100vh;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
 }
 
+/* Animate gradient */
 @keyframes gradientShift {
   0% {
     background-position: 0% 50%;
@@ -22,34 +33,154 @@ body {
   }
 }
 
+/* ===== GIF OVERLAY (fades in on hover) ===== */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: #000
+    url("https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMzFmaW5nNzR3OTEyNGtsYnZtNWh5eGN0bThjeGUyYm81OWdvaWhkNSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/OmfuBa7G55geGgC2Kn/giphy.gif")
+    center center / cover no-repeat fixed;
+  opacity: 0; /* hidden by default */
+  filter: blur(4px) brightness(0.9);
+  transform: scale(1.05); /* prevents edge artifacts when blurring */
+  transition:
+    opacity 0.6s ease,
+    filter 0.6s ease;
+  transition-delay: 0.12s; /* tiny delay to avoid instant flash */
+}
 
+/* When .bg-login-gif is added to body (on hover) */
+body.bg-login-gif::before {
+  opacity: 1;
+  filter: blur(4px) brightness(0.95);
+}
+
+/* ===== LAYOUT REGIONS ===== */
+.login-header {
+  width: 100%;
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Center main area vertically, but leave room for header/footer */
+.login-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+/* Footer */
+.login-footer {
+  width: 100%;
+  text-align: center;
+  padding: 12px 16px 18px;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+/* ===== HEADER BRANDING ===== */
+.login-logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: rgba(36, 58, 119, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 18px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.login-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-title-main {
+  font-size: 20px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.login-title-sub {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ===== LOGIN CARD ===== */
 .login-container {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.96);
+  padding: 28px 26px 24px;
+  border-radius: 14px;
   width: 100%;
   max-width: 400px;
-  box-shadow: 0 0 15px rgba(0,0,0,0.1);
+  box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
 }
 
+/* Slight lift on hover */
+.login-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* Title */
 .login-container h1 {
   margin-top: 0;
+  margin-bottom: 10px;
   text-align: center;
+  font-size: 22px;
+  color: #1f2933;
 }
 
+/* Form layout */
+#loginForm {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Labels */
 .login-container label {
   display: block;
-  margin: 15px 0 5px;
+  margin: 14px 0 6px;
+  font-size: 14px;
+  color: #4b5563;
 }
 
+/* Inputs */
 .login-container input {
-  padding: 8px;
-  border: 1px solid #ccc;
+  padding: 9px 10px;
+  border: 1px solid #cbd5e1;
   border-radius: 6px;
+  font-size: 14px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.login-container button {
-  margin-top: 20px;
+.login-container input:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35);
+}
+
+/* Primary button */
+.login-container .btn-primary {
+  margin-top: 18px;
   padding: 10px;
   width: 100%;
   background: #3455b1;
@@ -57,35 +188,66 @@ body {
   border: none;
   border-radius: 6px;
   cursor: pointer;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  transition:
+    background 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
 }
 
-.login-container button:hover {
+.login-container .btn-primary:hover {
   background: #17264f;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(23, 38, 79, 0.35);
 }
 
-#loginMessage {
-  margin-top: 10px;
-  text-align: center;
-  color: red;
-}
-
-#loginForm{
-  display: flex;
-  flex-direction: column;
-}
-
-.backToLogin{
+/* Back to user login link styled as button */
+.backToLogin {
+  display: block;
   background-color: #969828;
   text-decoration: none;
   text-align: center;
   width: 100%;
   color: white;
-  padding: 8px 0px;
+  padding: 9px 0;
   margin-top: 10px;
-  border-radius: 5px;
+  border-radius: 6px;
   font-size: 14px;
+  font-weight: 500;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease,
+    box-shadow 0.2s ease;
 }
 
-.backToLogin:hover{
+.backToLogin:hover {
   background-color: #3c3d10;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 14px rgba(60, 61, 16, 0.35);
+}
+
+/* Error message */
+#loginMessage {
+  margin-top: 10px;
+  text-align: center;
+  color: #e11d48;
+  font-size: 13px;
+  min-height: 16px;
+}
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 480px) {
+  .login-header {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .login-title-sub {
+    display: none; /* optional, to keep it clean on small screens */
+  }
+
+  .login-container {
+    padding: 24px 18px 20px;
+  }
 }

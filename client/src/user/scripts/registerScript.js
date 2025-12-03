@@ -17,6 +17,9 @@ registerForm.addEventListener("submit", async (e) => {
   const password = passwordInput.value.trim();
   const confirmPassword = confirmPasswordInput.value.trim();
 
+  // -----------------------------
+  // Basic validation
+  // -----------------------------
   if (!name || !email || !password || !confirmPassword) {
     showMessage("⚠️ All fields are required.", "error");
     return;
@@ -27,29 +30,72 @@ registerForm.addEventListener("submit", async (e) => {
     return;
   }
 
+  // -----------------------------
+  // reCAPTCHA v2 validation
+  // -----------------------------
+  let recaptchaToken = "";
+  try {
+    if (typeof grecaptcha !== "undefined") {
+      recaptchaToken = grecaptcha.getResponse();
+    }
+  } catch (err) {
+    console.error("reCAPTCHA not available:", err);
+  }
+
+  if (!recaptchaToken) {
+    showMessage("⚠️ Please complete the reCAPTCHA.", "error");
+    return;
+  }
+
+  // -----------------------------
+  // Submit to backend
+  // -----------------------------
   try {
     const res = await fetch("http://localhost:3000/api/v1/users/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password })
+      body: JSON.stringify({
+        name,
+        email,
+        password,
+        recaptchaToken, // 👈 send token to backend
+      }),
     });
 
     const data = await res.json();
 
     if (!res.ok) {
       showMessage(data.message || "❌ Registration failed.", "error");
+      // Optionally reset reCAPTCHA on failure
+      if (typeof grecaptcha !== "undefined") {
+        grecaptcha.reset();
+      }
       return;
     }
 
-    showMessage("✅ Registration successful! Redirecting to login...", "success");
+    showMessage(
+      "✅ Registration successful! Redirecting to login...",
+      "success"
+    );
+
+    // Reset reCAPTCHA and form on success
+    if (typeof grecaptcha !== "undefined") {
+      grecaptcha.reset();
+    }
+    registerForm.reset();
 
     setTimeout(() => {
       window.location.href = "login.html";
     }, 1500);
-
   } catch (err) {
     console.error(err);
-    showMessage("⚠️ Unable to connect to server. Please try again.", "error");
+    showMessage(
+      "⚠️ Unable to connect to server. Please try again.",
+      "error"
+    );
+    if (typeof grecaptcha !== "undefined") {
+      grecaptcha.reset();
+    }
   }
 });
 
@@ -61,7 +107,7 @@ registerForm.addEventListener("submit", async (e) => {
   if (!token) return;
 
   try {
-    const payloadBase64 = token.split('.')[1];
+    const payloadBase64 = token.split(".")[1];
     const decodedPayload = JSON.parse(atob(payloadBase64));
     const now = Math.floor(Date.now() / 1000);
 

@@ -1,144 +1,315 @@
-body {
-  font-family: Arial, sans-serif;
-  margin: 0;
-  background: #f9f9f9;
+/* ===== THEME VARIABLES (match inquiries) ===== */
+:root {
+  --bg-color: #f5f7fa;
+  --text-color: #111827;
+
+  --header-gradient: linear-gradient(to right, #243a77, #64651b);
+
+  --card-bg: #ffffff;
+  --border-color: #ecf0f1;
+  --table-header-bg: linear-gradient(to right, #243a77, #64651b);
+  --table-row-hover-bg: #f8f9fa;
+
+  --modal-bg: #ffffff;
+
+  --button-bg: #243a77;
+  --button-hover-bg: #17264e;
+
+  --logout-bg: #243a77;
+  --logout-hover-bg: #c0392b;
 }
 
+/* Dark mode overrides */
+:root.dark {
+  --bg-color: #050816;
+  --text-color: #e5e7eb;
+
+  --header-gradient: linear-gradient(to right, #020617, #111827);
+
+  --card-bg: #020617;
+  --border-color: #1f2933;
+  --table-header-bg: linear-gradient(to right, #020617, #111827);
+  --table-row-hover-bg: #0b1220;
+
+  --modal-bg: #020617;
+
+  --button-bg: #2563eb;
+  --button-hover-bg: #1d4ed8;
+
+  --logout-bg: #1f2937;
+  --logout-hover-bg: #b91c1c;
+}
+
+/* ===== RESET / BASE ===== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg-color);
+  color: var(--text-color);
+}
+
+/* ===== HEADER (same layout as inquiries) ===== */
 .admin-header {
-background: linear-gradient(to right, #243a77, #64651b);
+  background: var(--header-gradient);
   color: white;
-  padding: 1rem 2rem;
+  padding: 20px;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
+/* Title */
+.admin-header h1 {
+  margin: 0;
+  white-space: nowrap;
+}
+
+/* Search area between title and nav */
+.feature-header-controls {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+/* Search input in header */
+#searchFeature {
+  width: 100%;
+  max-width: 400px;
+  padding: 8px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* Nav links */
+.admin-header nav {
+  display: flex;
+  align-items: center;
+}
+
 .admin-header nav a {
   color: white;
-  margin-left: 1rem;
   text-decoration: none;
-}
-
-.admin-header nav a:hover {
-  text-decoration: underline;
-}
-
-.admin-main {
-  padding: 2rem;
-}
-
-.feature-controls {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 1rem;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.feature-controls input {
-  padding: 0.5rem;
-  width: 250px;
+  margin-left: 20px;
+  padding: 8px 16px;
   border-radius: 4px;
-  border: 1px solid #ccc;
 }
 
-.feature-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.feature-table th, .feature-table td {
-  padding: 0.75rem 1rem;
-  text-align: left;
-}
-
-.feature-table th {
-  background: #ecf0f1;
+.admin-header nav a.active {
+  background: #ffffff;
+  color: #243a77;
   font-weight: 600;
+  border-radius: 5px;  
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
 }
 
-.feature-table tr {
-  border-bottom: 1px solid #ddd;
+
+/* Only non-logout links get subtle hover */
+.admin-header nav a:not(.btn-logout):hover {
+  background: rgba(255, 255, 255, 0.1);
 }
 
-.feature-table tr:nth-child(even) {
-  background: #f9f9f9;
-}
-
-.feature-table tr:hover {
-  background: #dfe6e9;
-}
-
-button {
-  padding: 0.4rem 0.8rem;
-  cursor: pointer;
-  background: #243a77;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  font-size: 0.9rem;
-  transition: 0.2s;
-}
-
-button:hover {
-  background: #17264e;
-}
-
+/* Logout button (shared style) */
 .btn-logout {
   margin-left: 1rem;
-  padding: 6px 12px;
-  background: #243a77;
+  padding: 10px 18px;
+  background: var(--logout-bg);
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   cursor: pointer;
+  display: inline-block;
+  font-weight: 500;
 }
 
 .btn-logout:hover {
-  background: #c0392b;
+  background: var(--logout-hover-bg);
 }
 
-/* Modal Styles */
+/* ===== FLOATING THEME TOGGLE FAB ===== */
+.theme-toggle-fab {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background: var(--button-bg);
+  color: white;
+  font-size: 1.4rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  z-index: 1100;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+
+.theme-toggle-fab:hover {
+  background: var(--button-hover-bg);
+  transform: translateY(-2px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* ===== MAIN ===== */
+.admin-main {
+  padding: 20px;
+}
+
+/* ===== TOP CONTROLS (Add Feature) ===== */
+.feature-controls {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+#addFeatureBtn {
+  padding: 8px 14px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  background: var(--button-bg);
+  color: white;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+#addFeatureBtn:hover {
+  background: var(--button-hover-bg);
+  transform: translateY(-1px);
+}
+
+/* ===== TABLE ===== */
+.feature-table {
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  color: var(--text-color);
+  border-collapse: collapse;
+}
+
+.feature-table thead {
+  background: var(--table-header-bg);
+  color: white;
+}
+
+.feature-table th,
+.feature-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+/* Default row background */
+.feature-table tbody tr {
+  background: var(--card-bg);
+}
+
+.feature-table tbody tr:hover {
+  background: var(--table-row-hover-bg);
+}
+
+/* Center Actions column */
+.feature-table th:last-child,
+.feature-table td:last-child {
+  text-align: center;
+  vertical-align: middle;
+}
+
+/* ===== ACTION BUTTONS (Edit / Delete) ===== */
+.action-buttons {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.feature-action-btn {
+  padding: 8px 14px;
+  font-size: 12px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Edit button (blue) */
+.feature-action-btn.edit-btn {
+  background: #949544;
+  color: #fff;
+  transition: background 0.3s;
+}
+
+.feature-action-btn.edit-btn:hover {
+  background: #32330c;
+}
+
+/* Delete button (red) */
+.feature-action-btn.delete-btn {
+  background: #932110;
+  color: #fff;
+  transition: background 0.3s;
+}
+
+.feature-action-btn.delete-btn:hover {
+  background: #511812;
+}
+
+/* ===== MODAL ===== */
 .modal {
   display: none;
   position: fixed;
-  z-index: 999;
-  left: 0;
   top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 
 .modal-content {
-  background: white;
-  margin: 8% auto;
-  padding: 20px 30px;
-  border-radius: 8px;
-  width: 400px;
-  max-width: 90%;
-  position: relative;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--modal-bg);
+  color: var(--text-color);
+  width: 90%;
+  max-width: 400px;
+  border-radius: 12px;
+  padding: 20px 24px 24px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
 }
 
+.modal-content h2 {
+  margin-bottom: 10px;
+}
+
+/* Close icon */
 .close-btn {
   position: absolute;
-  top: 12px;
   right: 18px;
+  top: 14px;
   font-size: 24px;
-  font-weight: bold;
   cursor: pointer;
-  color: #333;
+  color: #7f8c8d;
 }
 
 .close-btn:hover {
-  color: #e74c3c;
+  color: #2c3e50;
 }
 
+/* Form */
 #featureForm label {
   display: block;
   margin-top: 1rem;
@@ -152,6 +323,7 @@ button:hover {
   border-radius: 4px;
   border: 1px solid #ccc;
   box-sizing: border-box;
+  font-size: 14px;
 }
 
 #featureForm button {
@@ -160,8 +332,14 @@ button:hover {
   background: #27ae60;
   font-size: 1rem;
   font-weight: 600;
+  padding: 10px 0;
+  border-radius: 6px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s ease;
 }
 
 #featureForm button:hover {
-  background: #219150;
+  background: #1e8449;
 }

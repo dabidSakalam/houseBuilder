@@ -25,12 +25,25 @@ body, html {
 /* LEFT SIDE: Background Image + Overlay */
 .welcome-left {
   flex: 1.5;
+  /* This background is used to detect the correct path in JS. */
   background: url('../../../public/images/house.jpg') center center / cover no-repeat;
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+
+/* Slideshow layer that actually fades between images */
+.slideshow-layer {
+  position: absolute;
+  inset: 0;
+  background-position: center center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  opacity: 1;
+  transition: opacity 1.5s ease-in-out;
+  z-index: 0;
 }
 
 /* Overlay tint */
@@ -67,22 +80,23 @@ body, html {
 }
 
 .start-btn:hover {
-  background: transparent;
+  background: white;
   color: #3455b1;
   transform: scale(1.05);
   box-shadow: 0 4px 20px #1c2d5b;
 }
 
-/* RIGHT SIDE: Text area */
+/* RIGHT SIDE: Text area (static gradient) */
 .welcome-right {
   flex: 1;
-  background: #ecf0f1;
+  background: linear-gradient(135deg, #ecf0f1, #dce6ff);
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 60px 70px;
 }
 
+/* Typography and branding */
 .welcome-title {
   font-size: 1.6rem;
   font-weight: 500;
@@ -127,13 +141,38 @@ body, html {
   max-width: 520px;
 }
 
+/* Login CTA on right side */
+.cta-row {
+  margin-top: 30px;
+}
+
+.login-btn {
+  display: inline-block;
+  padding: 12px 32px;
+  border-radius: 30px;
+  background: #fff;
+  color: #3455b1;
+  font-weight: 600;
+  text-decoration: none;
+  border: 2px solid #3455b1;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  transition: all 0.25s ease;
+}
+
+.login-btn:hover {
+  background: #3455b1;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
 /* RESPONSIVE */
 @media (max-width: 992px) {
   .welcome-screen {
     flex-direction: column;
   }
 
-  .welcome-left, .welcome-right {
+  .welcome-left,
+  .welcome-right {
     flex: unset;
     width: 100%;
     height: 50vh;
@@ -150,5 +189,9 @@ body, html {
 
   .description {
     margin: 0 auto;
+  }
+
+  .cta-row {
+    margin-top: 20px;
   }
 }

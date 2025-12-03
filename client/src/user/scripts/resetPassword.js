@@ -1,7 +1,7 @@
 const form = document.getElementById("resetPasswordForm");
 const passwordInput = document.getElementById("password");
 const confirmPasswordInput = document.getElementById("confirmPassword");
-const messageBox = document.getElementById("messageBox");
+const messageBox = document.getElementById("resetMessage"); // 👈 match HTML id
 
 // Get token from query string
 const urlParams = new URLSearchParams(window.location.search);
@@ -54,13 +54,12 @@ form.addEventListener("submit", async (e) => {
 });
 
 function showMessage(message, type) {
+  if (!messageBox) return; // safety
   messageBox.textContent = message;
-  messageBox.className = `message-box ${type}`;
+  messageBox.className = `reset-message ${type}`;
   messageBox.style.display = "block";
 
   setTimeout(() => {
     messageBox.style.display = "none";
   }, 4000);
 }
-
-

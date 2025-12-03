@@ -1,6 +1,6 @@
 const API_BASE = 'http://localhost:3000/api/v1/users';
 
-// Get user from localStorage
+// ===== AUTH BASIC CHECK =====
 const authToken = localStorage.getItem('authToken');
 if (!authToken) {
   alert('Please login first');
@@ -8,8 +8,6 @@ if (!authToken) {
 }
 
 const userId = localStorage.getItem('userId');
-
-// Debug: Check if userId exists
 console.log('User ID from localStorage:', userId);
 console.log('Auth Token exists:', !!authToken);
 
@@ -19,21 +17,39 @@ if (!userId) {
   window.location.href = './index.html';
 }
 
-// Logout functionality
+// ===== USER MENU DROPDOWN =====
+const userMenu = document.getElementById('userMenu');
+const userIcon = document.getElementById('userIcon');
+const userDropdown = document.getElementById('userDropdown');
+
+if (userIcon && userDropdown && userMenu) {
+  userIcon.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userDropdown.classList.toggle('show');
+  });
+
+  document.addEventListener('click', (e) => {
+    if (!userMenu.contains(e.target)) {
+      userDropdown.classList.remove('show');
+    }
+  });
+}
+
+// ===== LOGOUT =====
 document.getElementById('logoutBtn')?.addEventListener('click', () => {
   localStorage.clear();
   window.location.href = './index.html';
 });
 
-// ✅ Fetch user profile
+// ===== FETCH USER PROFILE =====
 async function fetchUserProfile() {
   try {
     console.log('Fetching profile for user:', userId);
 
     const response = await fetch(`${API_BASE}/profile/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${authToken}`
-      }
+        Authorization: `Bearer ${authToken}`,
+      },
     });
 
     console.log('Profile response status:', response.status);
@@ -48,12 +64,13 @@ async function fetchUserProfile() {
 
     document.getElementById('userEmail').textContent = data.email;
     document.getElementById('userName').textContent = data.name;
-    document.getElementById('memberSince').textContent = new Date(data.created_at).toLocaleDateString('en-US', {
+    document.getElementById('memberSince').textContent = new Date(
+      data.created_at
+    ).toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
-
   } catch (error) {
     console.error('Error fetching profile:', error);
     document.getElementById('userEmail').textContent = 'Error: ' + error.message;
@@ -62,7 +79,7 @@ async function fetchUserProfile() {
   }
 }
 
-// ===== Fetch inquiry history (UPDATED WITH COMPLETED STATUS) =====
+// ===== FETCH INQUIRY HISTORY (WITH STATUS VARIANTS) =====
 async function fetchInquiryHistory() {
   const container = document.getElementById('historyContainer');
 
@@ -71,8 +88,8 @@ async function fetchInquiryHistory() {
 
     const response = await fetch(`${API_BASE}/inquiries/${userId}`, {
       headers: {
-        'Authorization': `Bearer ${authToken}`
-      }
+        Authorization: `Bearer ${authToken}`,
+      },
     });
 
     console.log('Inquiries response status:', response.status);
@@ -101,129 +118,137 @@ async function fetchInquiryHistory() {
       return;
     }
 
-    container.innerHTML = inquiries.map(inquiry => {
-      const features = inquiry.features || [];
-      const status = inquiry.status || 'pending';
+    container.innerHTML = inquiries
+      .map((inquiry) => {
+        const features = inquiry.features || [];
+        const status = inquiry.status || 'pending';
 
-      const date = new Date(inquiry.created_at).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-      });
+        const date = new Date(inquiry.created_at).toLocaleDateString(
+          'en-US',
+          {
+            year: 'numeric',
+            month: 'short',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }
+        );
 
-      // ✅ UPDATED: Status badge styling with COMPLETED status
-      let statusClass = 'pending';
-      let statusText = 'Pending Review';
-      let statusIcon = '⏳';
+        // Status badge
+        let statusClass = 'pending';
+        let statusText = 'Pending Review';
+        let statusIcon = '⏳';
 
-      if (status === 'accepted') {
-        statusClass = 'accepted';
-        statusText = 'Accepted';
-        statusIcon = '✅';
-      } else if (status === 'completed') {
-        statusClass = 'completed';
-        statusText = 'Completed';
-        statusIcon = '🎉';
-      } else if (status === 'cancelled') {
-        statusClass = 'cancelled';
-        statusText = 'Cancelled';
-        statusIcon = '❌';
-      }
+        if (status === 'accepted') {
+          statusClass = 'accepted';
+          statusText = 'Accepted';
+          statusIcon = '✅';
+        } else if (status === 'completed') {
+          statusClass = 'completed';
+          statusText = 'Completed';
+          statusIcon = '🎉';
+        } else if (status === 'cancelled') {
+          statusClass = 'cancelled';
+          statusText = 'Cancelled';
+          statusIcon = '❌';
+        }
 
-      // ✅ UPDATED: Action buttons based on status (INCLUDING COMPLETED)
-      let actionButtons = '';
-      if (status === 'pending') {
-        actionButtons = `
-          <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
-            👁️ View Full Details
-          </button>
-          <button class="cancel-btn" onclick="cancelInquiry(${inquiry.inquiry_id})">
-            ❌ Cancel Project
-          </button>
-        `;
-      } else if (status === 'accepted') {
-        actionButtons = `
-          <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
-            👁️ View Full Details
-          </button>
-          <button class="inbox-btn" onclick="goToInbox(${inquiry.inquiry_id})">
-            💬 Go to Inbox
-          </button>
-          <p class="cancel-disabled">Cannot cancel accepted projects</p>
-        `;
-      } else if (status === 'completed') {
-        // ✅ NEW: Completed status actions
-        actionButtons = `
-          <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
-            👁️ View Full Details
-          </button>
-          <button class="inbox-btn" onclick="goToInbox(${inquiry.inquiry_id})">
-            💬 View Messages
-          </button>
-          <p class="completed-message">✨ Project has been completed!</p>
-        `;
-      } else if (status === 'cancelled') {
-        actionButtons = `
-          <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
-            👁️ View Full Details
-          </button>
-        `;
-      }
+        // Actions by status
+        let actionButtons = '';
+        if (status === 'pending') {
+          actionButtons = `
+            <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
+              𝒊 View Full Details
+            </button>
+            <button class="cancel-btn" onclick="cancelInquiry(${inquiry.inquiry_id})">
+              ❌ Cancel Project
+            </button>
+          `;
+        } else if (status === 'accepted') {
+          actionButtons = `
+            <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
+              𝒊 View Full Details
+            </button>
+            <button class="inbox-btn" onclick="goToInbox(${inquiry.inquiry_id})">
+              💬 Go to Inbox
+            </button>
+            <p class="cancel-disabled">Cannot cancel accepted projects</p>
+          `;
+        } else if (status === 'completed') {
+          actionButtons = `
+            <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
+              𝒊 View Full Details
+            </button>
+            <button class="inbox-btn" onclick="goToInbox(${inquiry.inquiry_id})">
+              💬 View Messages
+            </button>
+            <p class="completed-message">✨ Project has been completed!</p>
+          `;
+        } else if (status === 'cancelled') {
+          actionButtons = `
+            <button class="view-details-btn" onclick="viewInquiryDetails(${inquiry.inquiry_id})">
+              𝒊 View Full Details
+            </button>
+          `;
+        }
 
-      return `
-        <div class="inquiry-card ${status}">
-          <div class="inquiry-header">
-            <span class="inquiry-date">📅 ${date}</span>
-            <span class="inquiry-status ${statusClass}">${statusIcon} ${statusText}</span>
+        return `
+          <div class="inquiry-card ${status}">
+            <div class="inquiry-header">
+              <span class="inquiry-date">📅 ${date}</span>
+              <span class="inquiry-status ${statusClass}">
+                ${statusIcon} ${statusText}
+              </span>
+            </div>
+            <div class="inquiry-details">
+              <div class="inquiry-item"><strong>🎨 Style:</strong> ${inquiry.style || 'N/A'}</div>
+              <div class="inquiry-item"><strong>🛏️ Bedrooms:</strong> ${inquiry.bedrooms || 'N/A'}</div>
+              <div class="inquiry-item"><strong>🛁 Bathrooms:</strong> ${inquiry.bathrooms || 'N/A'}</div>
+              <div class="inquiry-item"><strong>🏢 Floors:</strong> ${inquiry.floors || 'N/A'}</div>
+              <div class="inquiry-item"><strong>📐 Unit Size:</strong> ${inquiry.unit_size || 'N/A'} sqm</div>
+              <div class="inquiry-item"><strong>📍 Location:</strong> ${inquiry.city || 'N/A'}</div>
+              ${
+                features.length > 0
+                  ? `
+                <div class="inquiry-features">
+                  <strong>✨ Features:</strong><br>
+                  ${features
+                    .map((f) => `<span class="feature-tag">${f}</span>`)
+                    .join('')}
+                </div>
+              `
+                  : ''
+              }
+            </div>
+            <div class="inquiry-actions">
+              ${actionButtons}
+            </div>
           </div>
-          <div class="inquiry-details">
-            <div class="inquiry-item"><strong>🎨 Style:</strong> ${inquiry.style || 'N/A'}</div>
-            <div class="inquiry-item"><strong>🛏️ Bedrooms:</strong> ${inquiry.bedrooms || 'N/A'}</div>
-            <div class="inquiry-item"><strong>🛁 Bathrooms:</strong> ${inquiry.bathrooms || 'N/A'}</div>
-            <div class="inquiry-item"><strong>🏢 Floors:</strong> ${inquiry.floors || 'N/A'}</div>
-            <div class="inquiry-item"><strong>📐 Unit Size:</strong> ${inquiry.unit_size || 'N/A'} sqm</div>
-            <div class="inquiry-item"><strong>📍 Location:</strong> ${inquiry.city || 'N/A'}</div>
-            ${features.length > 0 ? `
-              <div class="inquiry-features">
-                <strong>✨ Features:</strong><br>
-                ${features.map(f => `<span class="feature-tag">${f}</span>`).join('')}
-              </div>
-            ` : ''}
-          </div>
-          <div class="inquiry-actions">
-            ${actionButtons}
-          </div>
-        </div>
-      `;
-    }).join('');
-
+        `;
+      })
+      .join('');
   } catch (error) {
     console.error('Error fetching inquiries:', error);
     container.innerHTML = `<div class="loading">❌ Error: ${error.message}</div>`;
   }
 }
 
-// ===== View Inquiry Details (FIXED VERSION) =====
+// ===== VIEW INQUIRY DETAILS (IFRAME MODAL) =====
 function viewInquiryDetails(inquiryId) {
   console.log('🔍 Attempting to view inquiry:', inquiryId);
-  
+
   const iframe = document.getElementById('detailsModalFrame');
-  
+
   if (!iframe) {
     console.error('❌ Iframe not found in DOM');
     alert('Modal not found. Please refresh the page.');
     return;
   }
 
-  console.log('✅ Iframe found');
-
   const tryOpenModal = (attempt = 1, maxAttempts = 10) => {
     console.log(`⏳ Attempt ${attempt}/${maxAttempts} to open modal...`);
-    
+
     if (!iframe.contentWindow) {
-      console.error('❌ Iframe contentWindow not available');
       if (attempt < maxAttempts) {
         setTimeout(() => tryOpenModal(attempt + 1, maxAttempts), 300);
       } else {
@@ -233,127 +258,75 @@ function viewInquiryDetails(inquiryId) {
     }
 
     const modalFunction = iframe.contentWindow.openDetailsModal;
-    console.log('Function check:', typeof modalFunction);
 
     if (typeof modalFunction === 'function') {
-      console.log('✅ Function found! Opening modal...');
-      
-      // ✅ FIRST: Reset any existing modal state
-      const modalOverlay = iframe.contentWindow.document.getElementById('detailsModal');
+      // Reset any previous state
+      const modalOverlay =
+        iframe.contentWindow.document.getElementById('detailsModal');
       if (modalOverlay) {
         modalOverlay.classList.remove('active');
-        console.log('🔄 Reset modal state');
       }
-      
-      // ✅ THEN: Show iframe
+
+      // Show iframe
       iframe.style.display = 'block';
-      
-      // ✅ FINALLY: Open modal with delay to ensure DOM is ready
+
+      // Call modal
       setTimeout(() => {
         try {
           modalFunction(inquiryId);
-          console.log('✅ Modal opened successfully');
         } catch (error) {
-          console.error('❌ Error calling function:', error);
+          console.error('❌ Error calling openDetailsModal:', error);
           alert('Error opening modal: ' + error.message);
         }
       }, 100);
-      
     } else if (attempt < maxAttempts) {
-      console.log(`⏳ Function not ready yet (attempt ${attempt}), retrying...`);
       setTimeout(() => tryOpenModal(attempt + 1, maxAttempts), 300);
     } else {
-      console.error('❌ Function not found after all attempts');
+      console.error('❌ openDetailsModal not found');
       alert('Unable to load modal. Please refresh the page and try again.');
     }
   };
 
-  // Wait a bit for iframe to be ready
   if (iframe.contentWindow && iframe.contentWindow.document.readyState === 'complete') {
-    console.log('✅ Iframe already loaded');
     tryOpenModal();
   } else {
-    console.log('⏳ Waiting for iframe to load...');
     iframe.onload = () => {
-      console.log('✅ Iframe onload fired');
-      setTimeout(() => tryOpenModal(), 500);
+      setTimeout(() => tryOpenModal(), 400);
     };
   }
 }
 
-// Make function globally accessible
 window.viewInquiryDetails = viewInquiryDetails;
 
-// ===== Pre-load iframe when page loads =====
+// Preload iframe for logging/debug (optional)
 window.addEventListener('DOMContentLoaded', () => {
-  console.log('📦 DOMContentLoaded - Looking for iframe...');
   const iframe = document.getElementById('detailsModalFrame');
   if (iframe) {
-    console.log('✅ Iframe found, waiting for load...');
-    
     iframe.onload = () => {
-      console.log('✅ Details modal iframe loaded!');
-      console.log('Iframe src:', iframe.src);
-      console.log('ContentWindow available:', !!iframe.contentWindow);
-      
-      setTimeout(() => {
-        if (iframe.contentWindow && iframe.contentWindow.openDetailsModal) {
-          console.log('✅ openDetailsModal function is available!');
-        } else {
-          console.error('❌ openDetailsModal function NOT available');
-        }
-      }, 1000);
+      console.log('✅ Details modal iframe loaded!', iframe.src);
     };
-  } else {
-    console.error('❌ Iframe not found on page load');
   }
 });
 
-// Make function globally accessible
-window.viewInquiryDetails = viewInquiryDetails;
-
-// ===== Pre-load iframe when page loads =====
-window.addEventListener('DOMContentLoaded', () => {
-  console.log('📦 DOMContentLoaded - Looking for iframe...');
-  const iframe = document.getElementById('detailsModalFrame');
-  if (iframe) {
-    console.log('✅ Iframe found, waiting for load...');
-
-    iframe.onload = () => {
-      console.log('✅ Details modal iframe loaded!');
-      console.log('Iframe src:', iframe.src);
-      console.log('ContentWindow available:', !!iframe.contentWindow);
-
-      setTimeout(() => {
-        if (iframe.contentWindow && iframe.contentWindow.openDetailsModal) {
-          console.log('✅ openDetailsModal function is available!');
-        } else {
-          console.error('❌ openDetailsModal function NOT available');
-        }
-      }, 1000);
-    };
-  } else {
-    console.error('❌ Iframe not found on page load');
-  }
-});
-
-// ===== Cancel Inquiry Function =====
+// ===== CANCEL INQUIRY =====
 async function cancelInquiry(inquiryId) {
   console.log('🔍 Attempting to cancel inquiry:', inquiryId);
-  console.log('🔍 API endpoint:', `${API_BASE}/inquiries/${inquiryId}/cancel`);
 
   if (!confirm('Are you sure you want to cancel this project inquiry?')) {
     return;
   }
 
   try {
-    const response = await fetch(`${API_BASE}/inquiries/${inquiryId}/cancel`, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Content-Type': 'application/json'
+    const response = await fetch(
+      `${API_BASE}/inquiries/${inquiryId}/cancel`,
+      {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${authToken}`,
+          'Content-Type': 'application/json',
+        },
       }
-    });
+    );
 
     console.log('📡 Response status:', response.status);
 
@@ -368,22 +341,53 @@ async function cancelInquiry(inquiryId) {
     alert('✅ ' + result.message);
 
     fetchInquiryHistory();
-
   } catch (error) {
     console.error('Error cancelling inquiry:', error);
     alert('❌ Error: ' + error.message);
   }
 }
 
-// ===== Go to Inbox Function =====
 function goToInbox(inquiryId) {
-  // Redirect to inbox page with inquiry ID
   window.location.href = `./inbox.html?inquiry=${inquiryId}`;
 }
-// Make functions globally accessible
+
 window.cancelInquiry = cancelInquiry;
 window.goToInbox = goToInbox;
 
-// ✅ Call the functions when page loads
+// ===== DARK MODE / THEME TOGGLE (same key as home) =====
+const themeToggleBtn = document.getElementById('themeToggleBtn');
+const themeToggleIcon = document.getElementById('themeToggleIcon');
+const THEME_KEY = 'hb_theme';
+
+function updateThemeToggleIcon() {
+  if (!themeToggleIcon) return;
+  const isDark = document.body.classList.contains('dark-mode');
+  themeToggleIcon.textContent = isDark ? '☀️' : '🌙';
+}
+
+function applyTheme(theme) {
+  if (theme === 'dark') {
+    document.body.classList.add('dark-mode');
+  } else {
+    document.body.classList.remove('dark-mode');
+  }
+  updateThemeToggleIcon();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
+  applyTheme(savedTheme);
+
+  if (themeToggleBtn) {
+    themeToggleBtn.addEventListener('click', () => {
+      const isDark = document.body.classList.contains('dark-mode');
+      const nextTheme = isDark ? 'light' : 'dark';
+      localStorage.setItem(THEME_KEY, nextTheme);
+      applyTheme(nextTheme);
+    });
+  }
+});
+
+// ===== INITIAL LOAD =====
 fetchUserProfile();
 fetchInquiryHistory();

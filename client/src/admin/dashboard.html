@@ -11,14 +11,14 @@
 <body>
   <header class="admin-header">
     <h1>Admin Dashboard</h1>
-    <nav>
-      <a href="dashboard.html" class="active">Statistics</a>
-      <a href="models.html">Models</a>
-      <a href="cityRates.html">City</a>
-      <a href="features.html">Features</a>
-      <a href="Inquiries.html">Inquiries</a>
-      <button id="logoutBtn" class="btn-logout">Logout</button>
-    </nav>
+ <nav>
+    <a href="dashboard.html" class="active">Statistics</a>
+    <a href="models.html">Models</a>
+    <a href="cityRates.html">City</a>
+    <a href="features.html">Features</a>
+    <a href="inquiries.html">Inquiries</a>
+    <button id="logoutBtn" class="btn-logout" type="button">Logout</button>
+  </nav>
   </header>
 
   <main class="main-content">
@@ -65,6 +65,42 @@
     </section>
   </main>
 
+  <!-- 🌙 Floating dark mode toggle -->
+  <button
+    id="theme-toggle"
+    class="theme-toggle-fab"
+    aria-label="Toggle dark mode"
+    type="button"
+  >
+    🌙
+  </button>
+
   <script type="module" src="./scripts/dashboard.js"></script>
+
+  <!-- 🌙 Theme toggle logic -->
+  <script>
+    const root = document.documentElement;
+    const themeToggleBtn = document.getElementById('theme-toggle');
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        root.classList.add('dark');
+        themeToggleBtn.textContent = '☀️';
+      } else {
+        root.classList.remove('dark');
+        themeToggleBtn.textContent = '🌙';
+      }
+    }
+
+    // Load saved theme (shared with other admin pages)
+    const savedTheme = localStorage.getItem('admin-theme');
+    applyTheme(savedTheme === 'dark' ? 'dark' : 'light');
+
+    themeToggleBtn.addEventListener('click', () => {
+      const newTheme = root.classList.contains('dark') ? 'light' : 'dark';
+      applyTheme(newTheme);
+      localStorage.setItem('admin-theme', newTheme);
+    });
+  </script>
 </body>
 </html>

@@ -1,4 +1,5 @@
 const { db } = require('../../db/connection');
+const { sendAcceptanceNotification, sendCompletionNotification } = require('../../services/emailService');
 
 // ===== GET ALL INQUIRIES =====
 const getAllInquiries = async (req, res) => {
@@ -90,14 +91,17 @@ const sendToContractor = async (req, res) => {
   }
 };
 
-// ===== ACCEPT INQUIRY ===== ✅ NEW
+// ===== ACCEPT INQUIRY ===== ✅ UPDATED WITH EMAIL
 const acceptInquiry = async (req, res) => {
   try {
     const { inquiryId } = req.params;
 
-    // Check if inquiry exists
+    // Check if inquiry exists and get client info
     const [inquiry] = await db.query(
-      'SELECT * FROM inquiries WHERE inquiry_id = ?',
+      `SELECT i.*, u.email, u.name
+       FROM inquiries i 
+       JOIN users u ON i.user_id = u.user_id 
+       WHERE i.inquiry_id = ?`,
       [inquiryId]
     );
 
@@ -121,9 +125,35 @@ const acceptInquiry = async (req, res) => {
       ['accepted', inquiryId]
     );
 
+    // ✅ Send acceptance email to client
+    // Split name if it contains space, otherwise use as first_name
+    const fullName = inquiry[0].name || '';
+    const nameParts = fullName.trim().split(' ');
+    
+    const clientInfo = {
+      email: inquiry[0].email,
+      first_name: nameParts[0] || '',
+      last_name: nameParts.slice(1).join(' ') || ''
+    };
+
+    const inquiryData = {
+      inquiry_id: inquiryId,
+      bedrooms: inquiry[0].bedrooms,
+      bathrooms: inquiry[0].bathrooms,
+      style: inquiry[0].style,
+      city: inquiry[0].city
+    };
+
+    const emailResult = await sendAcceptanceNotification(inquiryData, clientInfo);
+    
+    if (!emailResult.success) {
+      console.warn('⚠️ Failed to send acceptance email, but inquiry was accepted');
+    }
+
     res.json({ 
       message: 'Inquiry accepted successfully',
-      inquiryId 
+      inquiryId,
+      emailSent: emailResult.success
     });
 
   } catch (err) {
@@ -132,14 +162,17 @@ const acceptInquiry = async (req, res) => {
   }
 };
 
-// ===== COMPLETE INQUIRY ===== ✅ NEW
+// ===== COMPLETE INQUIRY ===== ✅ UPDATED WITH EMAIL
 const completeInquiry = async (req, res) => {
   try {
     const { inquiryId } = req.params;
 
-    // Check if inquiry exists
+    // Check if inquiry exists and get client info
     const [inquiry] = await db.query(
-      'SELECT * FROM inquiries WHERE inquiry_id = ?',
+      `SELECT i.*, u.email, u.name
+       FROM inquiries i 
+       JOIN users u ON i.user_id = u.user_id 
+       WHERE i.inquiry_id = ?`,
       [inquiryId]
     );
 
@@ -168,9 +201,35 @@ const completeInquiry = async (req, res) => {
       ['completed', inquiryId]
     );
 
+    // ✅ Send completion email to client
+    // Split name if it contains space, otherwise use as first_name
+    const fullName = inquiry[0].name || '';
+    const nameParts = fullName.trim().split(' ');
+    
+    const clientInfo = {
+      email: inquiry[0].email,
+      first_name: nameParts[0] || '',
+      last_name: nameParts.slice(1).join(' ') || ''
+    };
+
+    const inquiryData = {
+      inquiry_id: inquiryId,
+      bedrooms: inquiry[0].bedrooms,
+      bathrooms: inquiry[0].bathrooms,
+      style: inquiry[0].style,
+      city: inquiry[0].city
+    };
+
+    const emailResult = await sendCompletionNotification(inquiryData, clientInfo);
+    
+    if (!emailResult.success) {
+      console.warn('⚠️ Failed to send completion email, but inquiry was marked as completed');
+    }
+
     res.json({ 
       message: 'Project marked as completed successfully!',
-      inquiryId 
+      inquiryId,
+      emailSent: emailResult.success
     });
 
   } catch (err) {
@@ -179,11 +238,11 @@ const completeInquiry = async (req, res) => {
   }
 };
 
-// ✅ UPDATE EXPORTS - Add completeInquiry
+// ✅ UPDATE EXPORTS
 module.exports = { 
   getAllInquiries, 
   getInquiryById, 
   sendToContractor,
   acceptInquiry,
-  completeInquiry  // Add this
+  completeInquiry
 };

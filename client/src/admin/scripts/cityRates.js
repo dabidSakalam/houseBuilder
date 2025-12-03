@@ -46,7 +46,7 @@ modal.innerHTML = `
       <label>City Name</label>
       <input type="text" id="cityName" required>
       <div class="modal-actions">
-        <button type="submit">Save</button>
+        <button type="submit">Add</button>
         <button type="button" id="closeModal">Cancel</button>
       </div>
     </form>
